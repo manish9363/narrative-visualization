@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
-   // Load the data
-   d3.csv("data/netflix_titles 2.csv").then(function(data) {
+   d3.csv("data/netflix_titles.csv").then(function(data) {
      // Calculate total titles
      const totalTitles = data.length;
      document.querySelector("#total-titles p").innerText = totalTitles;
@@ -16,173 +15,172 @@ document.addEventListener("DOMContentLoaded", function() {
      document.querySelector("#average-year p").innerText = averageYear;
  
      // Set up navigation
-     document.querySelector("#nextButton").addEventListener("click", function() {
-       document.querySelector(".content").classList.add("hidden");
-       document.querySelector("#slideshow").classList.remove("hidden");
-       showSlide(currentSlide);
-     });
- 
+     document.querySelector("#nextButton").addEventListener("click", nextSlide);
      document.querySelector("#prevButton").addEventListener("click", previousSlide);
-     document.querySelector("#nextSlideButton").addEventListener("click", nextSlide);
+ 
+     showSlide(currentSlide);
+ 
+     createDynamicLineGraphWithMilestones(data);
+   }).catch(function(error) {
+     console.error('Error loading the CSV file:', error);
    });
  });
  
  let currentSlide = 0;
- const totalSlides = 3; // Only three slides as requested
+ const totalSlides = 2;
  
  function showSlide(n) {
-   const visualization = document.querySelector("#visualization");
-   visualization.innerHTML = ''; // Clear the visualization content
+   const slides = document.querySelectorAll(".slide");
+   slides.forEach((slide, index) => {
+     slide.classList.toggle("hidden", index !== n);
+   });
  
-   if (n === 0) {
-     createSlide1();
-   } else if (n === 1) {
-     createSlide2();
-   } else if (n === 2) {
-     createSlide3();
-   }
+   document.querySelector("#prevButton").classList.toggle("hidden", n === 0);
+   document.querySelector("#nextButton").classList.toggle("hidden", n === totalSlides - 1);
  }
  
  function nextSlide() {
-   currentSlide = (currentSlide + 1) % totalSlides;
-   showSlide(currentSlide);
+   if (currentSlide < totalSlides - 1) {
+     currentSlide++;
+     showSlide(currentSlide);
+   }
  }
  
  function previousSlide() {
-   currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-   showSlide(currentSlide);
+   if (currentSlide > 0) {
+     currentSlide--;
+     showSlide(currentSlide);
+   }
  }
  
- function createSlide1() {
-   const svg = d3.select("#visualization").append("svg")
+ function createDynamicLineGraphWithMilestones(data) {
+   const svg = d3.select("#line-graph").append("svg")
      .attr("width", 800)
      .attr("height", 600);
  
-   svg.append("text")
-     .attr("x", 100)
-     .attr("y", 50)
-     .attr("class", "annotation")
-     .text("Slide 1: Overview of Netflix Titles");
+   const margin = { top: 20, right: 20, bottom: 30, left: 50 };
+   const width = +svg.attr("width") - margin.left - margin.right;
+   const height = +svg.attr("height") - margin.top - margin.bottom;
+   const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
  
-   // Add more visual elements here
- }
+   const parseTime = d3.timeParse("%Y");
  
- function createSlide2() {
-   const svg = d3.select("#visualization").append("svg")
-     .attr("width", 800)
-     .attr("height", 600);
+   // Filter data from year 2000 onwards
+   const filteredData = data.filter(d => d.release_year >= 2000);
  
-   // Sample data
-   const data = [
-     { type: "Movie", count: 5000 },
-     { type: "TV Show", count: 3807 }
-   ];
+   const dataByYear = Array.from(
+     d3.rollup(filteredData, v => ({
+         total: v.length,
+         movie: v.filter(d => d.type === "Movie").length,
+         tvShow: v.filter(d => d.type === "TV Show").length
+       }), d => d.release_year),
+     ([key, value]) => ({ year: parseTime(key), ...value })
+   ).sort((a, b) => a.year - b.year);
  
-   const x = d3.scaleBand()
-     .domain(data.map(d => d.type))
-     .range([0, 800])
-     .padding(0.1);
+   const x = d3.scaleTime()
+     .domain([parseTime("2000"), d3.max(dataByYear, d => d.year)])
+     .range([0, width]);
  
    const y = d3.scaleLinear()
-     .domain([0, d3.max(data, d => d.count)])
-     .nice()
-     .range([600, 0]);
+     .domain([0, d3.max(dataByYear, d => d.total)])
+     .range([height, 0]);
  
-   svg.selectAll(".bar")
-     .data(data)
-     .enter().append("rect")
-     .attr("class", "bar")
-     .attr("x", d => x(d.type))
-     .attr("y", d => y(d.count))
-     .attr("width", x.bandwidth())
-     .attr("height", d => 600 - y(d.count))
-     .attr("fill", "#ff7e5f");
+   const line = d3.line()
+     .x(d => x(d.year))
+     .y(d => y(d.total));
  
-   svg.append("g")
-     .attr("transform", "translate(0,600)")
-     .call(d3.axisBottom(x));
+   g.append("g")
+     .attr("transform", `translate(0,${height})`)
+     .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%Y")));
  
-   svg.append("g")
+   g.append("g")
      .call(d3.axisLeft(y));
  
-   svg.append("text")
-     .attr("x", 400)
-     .attr("y", 50)
-     .attr("class", "annotation")
-     .attr("text-anchor", "middle")
-     .text("Slide 2: Distribution by Type");
+   const path = g.append("path")
+     .datum(dataByYear)
+     .attr("fill", "none")
+     .attr("stroke", "steelblue")
+     .attr("stroke-width", 1.5)
+     .attr("d", line);
  
-   // Add annotations
-   svg.append("text")
-     .attr("x", x("Movie") + x.bandwidth() / 2)
-     .attr("y", y(data[0].count) - 10)
-     .attr("class", "annotation")
-     .attr("text-anchor", "middle")
-     .text(`Movies: ${data[0].count}`);
+   // Dynamic transition
+   const totalLength = path.node().getTotalLength();
  
-   svg.append("text")
-     .attr("x", x("TV Show") + x.bandwidth() / 2)
-     .attr("y", y(data[1].count) - 10)
-     .attr("class", "annotation")
-     .attr("text-anchor", "middle")
-     .text(`TV Shows: ${data[1].count}`);
- }
+   path
+     .attr("stroke-dasharray", totalLength + " " + totalLength)
+     .attr("stroke-dashoffset", totalLength)
+     .transition()
+     .duration(5000)
+     .ease(d3.easeLinear)
+     .attr("stroke-dashoffset", 0);
  
- function createSlide3() {
-   const svg = d3.select("#visualization").append("svg")
-     .attr("width", 800)
-     .attr("height", 600);
+   // Add tooltip
+   const tooltip = d3.select("body").append("div")
+     .attr("class", "tooltip")
+     .style("position", "absolute")
+     .style("background", "lightsteelblue")
+     .style("padding", "5px")
+     .style("border-radius", "5px")
+     .style("pointer-events", "none")
+     .style("opacity", 0);
  
-   // Sample data
-   const data = [
-     { country: "United States", count: 3000 },
-     { country: "India", count: 800 },
-     { country: "United Kingdom", count: 600 },
-     { country: "Canada", count: 400 }
+   g.selectAll("dot")
+     .data(dataByYear)
+     .enter().append("circle")
+     .attr("r", 5)
+     .attr("cx", d => x(d.year))
+     .attr("cy", d => y(d.total))
+     .attr("fill", "steelblue")
+     .on("mouseover", function(event, d) {
+       tooltip.transition()
+         .duration(200)
+         .style("opacity", .9);
+       tooltip.html(`Year: ${d.year.getFullYear()}<br>Total: ${d.total}<br>Movies: ${d.movie}<br>TV Shows: ${d.tvShow}`)
+         .style("left", (event.pageX + 5) + "px")
+         .style("top", (event.pageY - 28) + "px");
+     })
+     .on("mouseout", function() {
+       tooltip.transition()
+         .duration(500)
+         .style("opacity", 0);
+     });
+ 
+   // Animation for revealing each milestone step by step
+   let index = 0;
+ 
+   const milestones = [
+     { year: 2007, description: "Netflix introduces streaming service." },
+     { year: 2013, description: "House of Cards, first original series." },
+     { year: 2015, description: "Netflix expands to Japan." },
+     { year: 2016, description: "Netflix available in 190 countries." },
+     { year: 2020, description: "Netflix reaches 200 million subscribers." }
+     // Add more milestones as needed
    ];
  
-   const x = d3.scaleBand()
-     .domain(data.map(d => d.country))
-     .range([0, 800])
-     .padding(0.1);
+   function revealNextMilestone() {
+     if (index < milestones.length) {
+       const milestone = milestones[index];
+       const yearData = dataByYear.find(d => d.year.getFullYear() === milestone.year);
  
-   const y = d3.scaleLinear()
-     .domain([0, d3.max(data, d => d.count)])
-     .nice()
-     .range([600, 0]);
+       g.append("circle")
+         .attr("r", 5)
+         .attr("cx", x(parseTime(milestone.year)))
+         .attr("cy", y(yearData ? yearData.total : 0))
+         .attr("fill", "red");
  
-   svg.selectAll(".bar")
-     .data(data)
-     .enter().append("rect")
-     .attr("class", "bar")
-     .attr("x", d => x(d.country))
-     .attr("y", d => y(d.count))
-     .attr("width", x.bandwidth())
-     .attr("height", d => 600 - y(d.count))
-     .attr("fill", "#feb47b");
+       g.append("text")
+         .attr("x", x(parseTime(milestone.year)))
+         .attr("y", y(yearData ? yearData.total : 0) - 20)
+         .attr("text-anchor", "middle")
+         .style("font-size", "12px")
+         .style("fill", "black")
+         .text(milestone.description);
  
-   svg.append("g")
-     .attr("transform", "translate(0,600)")
-     .call(d3.axisBottom(x));
+       index++;
+       setTimeout(revealNextMilestone, 2000); // Adjusted delay to 2000ms for a slower transition
+     }
+   }
  
-   svg.append("g")
-     .call(d3.axisLeft(y));
- 
-   svg.append("text")
-     .attr("x", 400)
-     .attr("y", 50)
-     .attr("class", "annotation")
-     .attr("text-anchor", "middle")
-     .text("Slide 3: Distribution by Country");
- 
-   // Add annotations
-   data.forEach(d => {
-     svg.append("text")
-       .attr("x", x(d.country) + x.bandwidth() / 2)
-       .attr("y", y(d.count) - 10)
-       .attr("class", "annotation")
-       .attr("text-anchor", "middle")
-       .text(`${d.country}: ${d.count}`);
-   });
+   revealNextMilestone();
  }
  

@@ -5,44 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Netflix Narrative Visualization</title>
   <link rel="stylesheet" href="css/style.css">
+  <script src="https://d3js.org/d3.v6.min.js"></script>
 </head>
 <body>
   <div class="container">
-    <div class="banner">
-      <img src="images/banner.png" alt="Netflix Banner">
-    </div>
-    <div class="content">
-      <h1>Exploring Netflix's Content Library</h1>
-      <div class="stats">
-        <div class="stat" id="total-titles">
-          <h2>Total Titles</h2>
-          <p></p>
+    <div id="slide0" class="slide">
+      <div class="content">
+        <h1>Exploring Netflix's Content Library</h1>
+        <div class="stats">
+          <div class="stat" id="total-titles">
+            <h2>Total Titles</h2>
+            <p></p>
+          </div>
+          <div class="stat" id="content-type">
+            <h2>Content Type Distribution</h2>
+            <p></p>
+          </div>
+          <div class="stat" id="average-year">
+            <h2>Average Release Year</h2>
+            <p></p>
+          </div>
         </div>
-        <div class="stat" id="content-type">
-          <h2>Content Type Distribution</h2>
-          <p></p>
-        </div>
-        <div class="stat" id="average-year">
-          <h2>Average Release Year</h2>
-          <p></p>
-        </div>
+        <p class="description">
+          This interactive slideshow explores the growth and distribution of Netflix's content library over the years, examining trends in genres, ratings, and release years.
+        </p>
+        <p class="source">
+          Data Source: <a href="https://www.kaggle.com/shivamb/netflix-shows" target="_blank">Netflix Shows on Kaggle</a><br>
+          Tested on Chrome and Safari.
+        </p>
       </div>
-      <p class="description">
-        This interactive slideshow explores the growth and distribution of Netflix's content library over the years, examining trends in genres, ratings, and release years.
-      </p>
-      <p class="source">
-        Data Source: <a href="https://www.kaggle.com/shivamb/netflix-shows" target="_blank">Netflix Shows on Kaggle</a><br>
-        Tested on Chrome and Safari.
-      </p>
+    </div>
+    <div id="slide1" class="slide hidden">
+      <h2>Trend of Netflix Titles Released Each Year</h2>
+      <div id="line-graph"></div>
+    </div>
+    <div class="navigation">
+      <button id="prevButton" class="hidden">Previous</button>
       <button id="nextButton">Next</button>
     </div>
-    <div id="slideshow" class="hidden">
-      <div id="visualization"></div>
-      <button id="prevButton">Previous</button>
-      <button id="nextSlideButton">Next</button>
-    </div>
   </div>
-  <script src="https://d3js.org/d3.v6.min.js"></script>
   <script src="js/script.js"></script>
 </body>
 </html>
