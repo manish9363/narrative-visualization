@@ -3,40 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Netflix Narrative Visualization</title>
+  <title>Netflix: A Visual Journey Through Streaming Evolution</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="https://d3js.org/d3.v6.min.js"></script>
 </head>
 <body>
   <div class="container">
     <div id="slide0" class="slide">
+      <div class="header">
+        <h1>Netflix: A Visual Journey Through Streaming Evolution</h1>
+      </div>
       <div class="content">
-        <h1>Exploring Netflix's Content Library</h1>
         <div class="stats">
-          <div class="stat" id="total-titles">
+          <div class="stat-box">
             <h2>Total Titles</h2>
-            <p></p>
+            <p id="total-titles"></p>
           </div>
-          <div class="stat" id="content-type">
+          <div class="stat-box">
             <h2>Content Type Distribution</h2>
-            <p></p>
-          </div>
-          <div class="stat" id="average-year">
-            <h2>Average Release Year</h2>
-            <p></p>
+            <p id="content-type"></p>
           </div>
         </div>
-        <p class="description">
-          This interactive slideshow explores the growth and distribution of Netflix's content library over the years, examining trends in genres, ratings, and release years.
-        </p>
-        <p class="source">
-          Data Source: <a href="https://www.kaggle.com/shivamb/netflix-shows" target="_blank">Netflix Shows on Kaggle</a><br>
-          Tested on Chrome and Safari.
-        </p>
+        <div class="description">
+          <p>
+            Welcome to an in-depth exploration of Netflix's expansive content library! Over the years, Netflix has transformed from a humble DVD rental service into a global streaming giant. In this interactive slideshow, we will journey through the various phases of Netflix's evolution, examining the trends and milestones that have shaped its vast and diverse collection of titles.
+          </p>
+          <p>
+            From blockbuster movies to critically acclaimed TV shows, Netflix's content library reflects the changing tastes and preferences of viewers worldwide. Join us as we dive into the data, uncovering insights about genres, ratings, and the strategic shifts that have propelled Netflix to the forefront of the entertainment industry.
+          </p>
+          <p>
+            Our visualization will not only highlight the significant growth in the number of titles but also shed light on the emergence of Netflix Originals and their impact on the streaming landscape. Get ready to explore how Netflix continues to innovate and captivate audiences across the globe.
+          </p>
+        </div>
+        <div class="source">
+          <p>Data Source: <a href="https://www.kaggle.com/shivamb/netflix-shows" target="_blank">Netflix Shows on Kaggle</a></p>
+          <p>Tested on Chrome and Safari.</p>
+        </div>
       </div>
     </div>
     <div id="slide1" class="slide hidden">
-      <h2>Trend of Netflix Titles Released Each Year</h2>
+      <h2>Netflix Titles Over the Years and Major Milestones</h2>
+      <div class="slider-container">
+        <input type="range" min="2000" max="2020" value="2020" class="slider" id="yearSlider">
+        <label for="yearSlider" id="yearLabel">2020</label>
+      </div>
       <div id="line-graph"></div>
     </div>
     <div class="navigation">

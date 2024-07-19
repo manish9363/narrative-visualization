@@ -1,77 +1,210 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(to right, #ff7e5f, #feb47b);
-    color: #333;
-  }
-  
-  .container {
-    width: 80%;
-    margin: auto;
-    text-align: center;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .content {
-    margin: 20px 0;
-  }
-  
-  .stats {
-    display: flex;
-    justify-content: space-around;
-    margin: 20px 0;
-  }
-  
-  .stat {
-    width: 30%;
-    background: #fff;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .stat h2 {
-    font-size: 1.5em;
-    margin: 10px 0;
-    color: #ff7e5f;
-  }
-  
-  .stat p {
-    font-size: 1.2em;
-  }
-  
-  .description {
-    font-size: 1.1em;
-  }
-  
-  .source {
-    font-size: 0.9em;
-    color: gray;
-  }
-  
-  button {
-    margin: 20px;
-    padding: 10px 20px;
-    font-size: 1em;
-    cursor: pointer;
-    background: #ff7e5f;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    transition: background 0.3s;
-  }
-  
-  button:hover {
-    background: #feb47b;
-  }
-  
-  .hidden {
-    display: none;
-  }
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f0f0; /* Light Gray background */
+  color: #333333; /* Dark text for contrast */
+  margin: 0;
+  padding: 0;
+}
 
-  
-  
+.container {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.slide {
+  padding: 20px;
+  border: 1px solid #ccc;
+  background: #ffffff; /* White background for the slide */
+  margin-bottom: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: #333333; /* Dark text inside the slide */
+}
+
+.header {
+  background-color: #e50914; /* Netflix Red */
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+  border-radius: 10px 10px 0 0;
+  font-size: 1em;
+}
+
+.hidden {
+  display: none;
+}
+
+.content {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.stat-box {
+  text-align: center;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 10px;
+  background: #ffffff; /* White background for stat boxes */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: #333333; /* Dark text for stat boxes */
+}
+
+.description {
+  margin-bottom: 20px;
+  line-height: 1.6;
+  color: #333333; /* Dark text for description */
+}
+
+.source {
+  font-size: 0.9em;
+  color: #555;
+}
+
+.milestones-list {
+  list-style: none;
+  padding: 0;
+}
+
+.milestones-list li {
+  margin: 10px 0;
+}
+
+.milestones-list a {
+  text-decoration: none;
+  color: #007BFF;
+}
+
+.milestones-list a:hover {
+  text-decoration: underline;
+}
+
+.navigation {
+  text-align: center;
+  margin-top: 20px;
+}
+
+button {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.tooltip {
+  position: absolute;
+  background: lightsteelblue;
+  padding: 5px;
+  border-radius: 5px;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.milestones {
+  margin-top: 20px;
+}
+
+.milestones h3 {
+  margin-top: 20px;
+}
+
+.dynamic-text {
+  text-align: center;
+  font-size: 20px;
+  color: black;
+  background: steelblue;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.slider-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.slider {
+  width: 300px;
+  margin-right: 10px;
+}
+
+.milestone-box rect {
+  fill: lightyellow;
+  stroke: #007BFF; /* Change the stroke color to blue */
+  stroke-width: 2px; /* Increase the thickness of the border */
+}
+
+.milestone-box text {
+  font-size: 12px; /* Slightly increase the font size for readability */
+  fill: #333333; /* Dark text for good contrast */
+}
+
+.milestone-box a {
+  fill: #007BFF; /* Blue color for the link */
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#slide1 {
+  background-color: #ffffff; /* White background for contrast */
+  color: #333333; /* Dark text for better readability */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#slide1 h2 {
+  color: #e50914; /* Netflix Red for the heading */
+  text-align: center; /* Center the text horizontally */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px; /* Adjust as needed for vertical centering */
+}
+
+#slide1 .slider-container {
+  background-color: #f0f0f0; /* Light Gray background for the slider container */
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#slide1 .slider-container input[type=range] {
+  width: 100%;
+  background-color: #007BFF; /* Blue slider track */
+  border-radius: 5px;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+#slide1 .slider-container input[type=range]::-webkit-slider-thumb {
+  width: 20px;
+  height: 20px;
+  background: #e50914; /* Netflix Red for the slider thumb */
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+
+#slide1 .slider-container input[type=range]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #e50914; /* Netflix Red for the slider thumb */
+  cursor: pointer;
+}
