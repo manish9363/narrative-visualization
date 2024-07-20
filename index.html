@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Netflix: A Visual Journey Through Streaming Evolution</title>
   <link rel="stylesheet" href="css/style.css">
-  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <script src="https://d3js.org/d3.v6.min.js"></script> <!-- Ensure D3 is loaded here -->
 </head>
 <body>
   <div class="container">
-    <div id="slide0" class="slide">
+    <div class="slide">
       <div class="header">
         <h1>Netflix: A Visual Journey Through Streaming Evolution</h1>
       </div>
@@ -39,26 +39,12 @@
           <p>Data Source: <a href="https://www.kaggle.com/shivamb/netflix-shows" target="_blank">Netflix Shows on Kaggle</a></p>
           <p>Tested on Chrome and Safari.</p>
         </div>
-      </div>
-    </div>
-    <div id="slide1" class="slide hidden">
-      <h2>Netflix Titles Over the Years and Major Milestones</h2>
-      <div class="slider-container">
-        <label for="yearSlider" id="sliderInstruction">Use the slider to navigate through the years:</label>
-        <div class="slider-wrapper">
-          <span class="slider-label">2000</span>
-          <input type="range" min="2000" max="2020" value="2020" class="slider" id="yearSlider">
-          <span class="slider-label">2020</span>
+        <div class="navigation">
+          <button onclick="window.location.href='linegraph.html'">Next</button>
         </div>
-        <label for="yearSlider" id="yearLabel">2020</label>
       </div>
-      <div id="line-graph"></div>
-    </div>    
-    <div class="navigation">
-      <button id="prevButton" class="hidden">Previous</button>
-      <button id="nextButton">Next</button>
     </div>
   </div>
-  <script src="js/script.js"></script>
+  <script src="js/index.js"></script> <!-- Ensure this is loaded after D3 -->
 </body>
 </html>

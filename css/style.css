@@ -248,3 +248,31 @@ button:hover {
   background: #e50914; /* Netflix Red for the slider thumb */
   cursor: pointer;
 }
+
+/* Additional styles for milestone1.html */
+
+#customerBaseChart {
+  margin: 20px 0;
+}
+
+.chart-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.x-axis-label, .y-axis-label {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.x-axis-label {
+  margin-top: 10px;
+}
+
+.y-axis-label {
+  margin-right: 10px;
+}
+
+.visualization {
+  margin-bottom: 20px;
+}
