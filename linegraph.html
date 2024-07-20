@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Netflix Titles Over the Years and Major Milestones</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div id="slide1" class="slide">
+      <h2>Netflix Titles Over the Years and Major Milestones</h2>
+      <div class="slider-container">
+        <div id="sliderInstruction">Use the slider to navigate through the years:</div>
+        <div class="slider-wrapper">
+          <span class="slider-label">2000</span>
+          <input type="range" min="2000" max="2020" value="2007" class="slider" id="yearSlider">
+          <span class="slider-label">2020</span>
+        </div>
+        <div id="yearLabel" class="slider-label">2007</div>
+      </div>
+      <div id="line-graph"></div>
+    </div>
+    <div class="navigation">
+      <button onclick="window.location.href='index.html'">Previous</button>
+    </div>
+  </div>
+  <script src="js/linegraph.js"></script>
+</body>
+</html>
