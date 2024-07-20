@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   function updateGraphForYear(year) {
       const svg = d3.select("#line-graph svg");
-      const margin = { top: 50, right: 20, bottom: 30, left: 50 };
+      const margin = { top: 50, right: 20, bottom: 50, left: 60 };
       const width = +svg.attr("width") - margin.left - margin.right;
       const height = +svg.attr("height") - margin.top - margin.bottom;
       const g = svg.select("g");
@@ -99,6 +99,18 @@ document.addEventListener("DOMContentLoaded", function() {
           .y(d => y(d.total));
 
       g.selectAll("path").remove(); // Remove existing paths before redrawing
+      g.selectAll(".x.axis").remove(); // Remove existing x-axis before redrawing
+      g.selectAll(".y.axis").remove(); // Remove existing y-axis before redrawing
+
+      g.append("g")
+          .attr("class", "x axis")
+          .attr("transform", `translate(0,${height})`)
+          .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%Y")));
+
+      g.append("g")
+          .attr("class", "y axis")
+          .call(d3.axisLeft(y));
+
       g.append("path")
           .datum(filteredData)
           .attr("fill", "none")
@@ -220,7 +232,7 @@ document.addEventListener("DOMContentLoaded", function() {
           .attr("width", 1200) // Adjusted width
           .attr("height", 600); // Adjusted height
 
-      const margin = { top: 50, right: 50, bottom: 50, left: 50 }; // Adjusted margins
+      const margin = { top: 50, right: 50, bottom: 50, left: 60 }; // Adjusted margins
       const width = +svg.attr("width") - margin.left - margin.right;
       const height = +svg.attr("height") - margin.top - margin.bottom;
       const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
@@ -283,11 +295,25 @@ document.addEventListener("DOMContentLoaded", function() {
           .y(d => y(d.total));
 
       g.append("g")
+          .attr("class", "x axis")
           .attr("transform", `translate(0,${height})`)
           .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%Y")));
 
       g.append("g")
+          .attr("class", "y axis")
           .call(d3.axisLeft(y));
+
+      // Add x-axis label
+      svg.append("text")
+          .attr("text-anchor", "middle")
+          .attr("transform", `translate(${margin.left + width / 2},${height + margin.top + 40})`)
+          .text("Year");
+
+      // Add y-axis label
+      svg.append("text")
+          .attr("text-anchor", "middle")
+          .attr("transform", `translate(${margin.left - 40},${margin.top + height / 2})rotate(-90)`)
+          .text("Total Titles");
 
       const path = g.append("path")
           .datum(dataByYear)

@@ -163,13 +163,13 @@ button:hover {
   appearance: none;
   background: linear-gradient(to right, #007BFF, #87CEEB); /* Blue slider track */
   border-radius: 5px;
-  height: 8px;
+  height: 6px; /* Reduced height */
   outline: none;
 }
 
 .slider::-webkit-slider-thumb {
-  width: 20px;
-  height: 20px;
+  width: 12px; /* Reduced thumb size */
+  height: 12px; /* Reduced thumb size */
   background: #e50914; /* Netflix Red for the slider thumb */
   cursor: pointer;
   -webkit-appearance: none;
@@ -178,8 +178,8 @@ button:hover {
 }
 
 .slider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
+  width: 12px; /* Reduced thumb size */
+  height: 12px; /* Reduced thumb size */
   background: #e50914; /* Netflix Red for the slider thumb */
   cursor: pointer;
   border-radius: 50%;
@@ -235,16 +235,16 @@ button:hover {
 }
 
 #slide1 .slider-container input[type=range]::-webkit-slider-thumb {
-  width: 20px;
-  height: 20px;
+  width: 12px; /* Smaller thumb */
+  height: 12px; /* Smaller thumb */
   background: #e50914; /* Netflix Red for the slider thumb */
   cursor: pointer;
   -webkit-appearance: none;
 }
 
 #slide1 .slider-container input[type=range]::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
+  width: 12px; /* Smaller thumb */
+  height: 12px; /* Smaller thumb */
   background: #e50914; /* Netflix Red for the slider thumb */
   cursor: pointer;
 }
