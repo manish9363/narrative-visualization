@@ -44,11 +44,16 @@
     <div id="slide1" class="slide hidden">
       <h2>Netflix Titles Over the Years and Major Milestones</h2>
       <div class="slider-container">
-        <input type="range" min="2000" max="2020" value="2020" class="slider" id="yearSlider">
+        <label for="yearSlider" id="sliderInstruction">Use the slider to navigate through the years:</label>
+        <div class="slider-wrapper">
+          <span class="slider-label">2000</span>
+          <input type="range" min="2000" max="2020" value="2020" class="slider" id="yearSlider">
+          <span class="slider-label">2020</span>
+        </div>
         <label for="yearSlider" id="yearLabel">2020</label>
       </div>
       <div id="line-graph"></div>
-    </div>
+    </div>    
     <div class="navigation">
       <button id="prevButton" class="hidden">Previous</button>
       <button id="nextButton">Next</button>

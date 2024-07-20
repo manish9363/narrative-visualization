@@ -135,14 +135,54 @@ button:hover {
 
 .slider-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   margin-bottom: 20px;
 }
 
+#sliderInstruction {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.slider-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.slider-label {
+  font-weight: bold;
+  margin: 0 10px;
+}
+
 .slider {
-  width: 300px;
-  margin-right: 10px;
+  width: 80%;
+  margin: 0 10px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: linear-gradient(to right, #007BFF, #87CEEB); /* Blue slider track */
+  border-radius: 5px;
+  height: 8px;
+  outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+  width: 20px;
+  height: 20px;
+  background: #e50914; /* Netflix Red for the slider thumb */
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 50%;
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #e50914; /* Netflix Red for the slider thumb */
+  cursor: pointer;
+  border-radius: 50%;
 }
 
 .milestone-box rect {
