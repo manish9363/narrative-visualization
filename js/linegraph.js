@@ -181,7 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        const dynamicText = d3.select(".dynamic-text");
+        const dynamicText = d3.select(".dynamic-text-container");
         const milestone = milestones.find(m => m.year === year);
         if (milestone) {
             dynamicText.html(`<a href="${milestone.link}" target="_self">${milestone.description}</a>`);
@@ -198,7 +198,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function createDynamicLineGraphWithMilestones(data) {
         const svg = d3.select("#line-graph").append("svg")
             .attr("width", 1200) // Adjusted width
-            .attr("height", 600); // Adjusted height
+            .attr("height", 500); // Adjusted height
 
         const margin = { top: 50, right: 50, bottom: 50, left: 60 }; // Adjusted margins
         const width = +svg.attr("width") - margin.left - margin.right;
@@ -342,7 +342,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
         // Add dynamic text at the bottom
-        const dynamicText = d3.select(".milestones")
+        const dynamicText = d3.select(".dynamic-text-container")
             .append("div")
             .attr("class", "dynamic-text")
             .style("text-align", "center")
