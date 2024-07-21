@@ -197,8 +197,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function createDynamicLineGraphWithMilestones(data) {
         const svg = d3.select("#line-graph").append("svg")
-            .attr("width", 1200) // Adjusted width
-            .attr("height", 500); // Adjusted height
+            .attr("width", 1300) // Adjusted width
+            .attr("height", 475); // Adjusted height
 
         const margin = { top: 50, right: 50, bottom: 50, left: 60 }; // Adjusted margins
         const width = +svg.attr("width") - margin.left - margin.right;
@@ -346,9 +346,9 @@ document.addEventListener("DOMContentLoaded", function () {
             .append("div")
             .attr("class", "dynamic-text")
             .style("text-align", "center")
-            .style("font-size", "20px")
+            .style("font-size", "14px")
             .style("color", "black")
-            .style("background", "steelblue")
+            .style("background", "lightsteelblue")
             .style("padding", "10px")
             .style("border-radius", "5px")
             .style("margin-top", "10px");
