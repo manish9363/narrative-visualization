@@ -276,3 +276,38 @@ button:hover {
 .visualization {
   margin-bottom: 20px;
 }
+
+.filter {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.annotation {
+  font-size: 14px;
+  fill: red;
+  font-weight: bold;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.legend-item rect {
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+}
+
+.legend-item text {
+  font-size: 14px;
+  fill: #333333;
+}

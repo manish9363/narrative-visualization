@@ -1,0 +1,91 @@
+year,region,customers
+2006,North America,5000000
+2007,North America,6000000
+2008,North America,8000000
+2009,North America,11000000
+2010,North America,14000000
+2011,North America,18000000
+2012,North America,23000000
+2013,North America,28000000
+2014,North America,33000000
+2015,North America,39000000
+2016,North America,46000000
+2017,North America,54000000
+2018,North America,62000000
+2019,North America,69000000
+2020,North America,76000000
+2006,LATAM,500000
+2007,LATAM,600000
+2008,LATAM,800000
+2009,LATAM,1100000
+2010,LATAM,1400000
+2011,LATAM,1800000
+2012,LATAM,2300000
+2013,LATAM,2800000
+2014,LATAM,3300000
+2015,LATAM,3900000
+2016,LATAM,4600000
+2017,LATAM,5400000
+2018,LATAM,6200000
+2019,LATAM,6900000
+2020,LATAM,7600000
+2006,Europe,1000000
+2007,Europe,1200000
+2008,Europe,1600000
+2009,Europe,2200000
+2010,Europe,2800000
+2011,Europe,3600000
+2012,Europe,4600000
+2013,Europe,5600000
+2014,Europe,6600000
+2015,Europe,7800000
+2016,Europe,9200000
+2017,Europe,10800000
+2018,Europe,12400000
+2019,Europe,13800000
+2020,Europe,15200000
+2006,Asia-Pacific,800000
+2007,Asia-Pacific,1000000
+2008,Asia-Pacific,1200000
+2009,Asia-Pacific,1500000
+2010,Asia-Pacific,2000000
+2011,Asia-Pacific,2500000
+2012,Asia-Pacific,3000000
+2013,Asia-Pacific,3600000
+2014,Asia-Pacific,4200000
+2015,Asia-Pacific,5000000
+2016,Asia-Pacific,6000000
+2017,Asia-Pacific,7000000
+2018,Asia-Pacific,8000000
+2019,Asia-Pacific,9000000
+2020,Asia-Pacific,10000000
+2006,Middle East and North Africa,300000
+2007,Middle East and North Africa,400000
+2008,Middle East and North Africa,500000
+2009,Middle East and North Africa,700000
+2010,Middle East and North Africa,900000
+2011,Middle East and North Africa,1100000
+2012,Middle East and North Africa,1300000
+2013,Middle East and North Africa,1600000
+2014,Middle East and North Africa,2000000
+2015,Middle East and North Africa,2500000
+2016,Middle East and North Africa,3000000
+2017,Middle East and North Africa,3500000
+2018,Middle East and North Africa,4000000
+2019,Middle East and North Africa,4500000
+2020,Middle East and North Africa,5000000
+2006,Sub-Saharan Africa,200000
+2007,Sub-Saharan Africa,300000
+2008,Sub-Saharan Africa,400000
+2009,Sub-Saharan Africa,600000
+2010,Sub-Saharan Africa,800000
+2011,Sub-Saharan Africa,1000000
+2012,Sub-Saharan Africa,1200000
+2013,Sub-Saharan Africa,1500000
+2014,Sub-Saharan Africa,1900000
+2015,Sub-Saharan Africa,2300000
+2016,Sub-Saharan Africa,2800000
+2017,Sub-Saharan Africa,3400000
+2018,Sub-Saharan Africa,4000000
+2019,Sub-Saharan Africa,4600000
+2020,Sub-Saharan Africa,5200000
