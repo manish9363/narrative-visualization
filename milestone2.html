@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milestone 2: House of Cards, First Original Series</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>2013: House of Cards, First Original Series</h1>
+        </div>
+        <div class="content">
+            <div class="description">
+                <p>
+                    The release of "House of Cards" in 2013 marked Netflix's entry into original content. This was a game-changer, leading to a surge in new customers and increasing viewership for original series. The graph below illustrates the impact of this milestone. Hover over the data points to see more details.
+                </p>
+            </div>
+            <div class="visualization">
+                <h3>Customer Growth and Viewership Trends</h3>
+                <div id="combinedChart"></div>
+                <label for="filterDropdown">Filter by Content Type: </label>
+                <select id="filterDropdown">
+                    <option value="all">All</option>
+                    <option value="customers">Customers</option>
+                    <option value="originalSeries">Original Series</option>
+                    <option value="licensedContent">Licensed Content</option>
+                </select>
+            </div>
+            <div class="navigation">
+                <button onclick="window.history.back()">Back to Main Page</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/milestone2.js"></script>
+</body>
+</html>
