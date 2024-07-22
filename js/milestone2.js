@@ -1,224 +1,219 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const combinedData = [
-        { year: 2009, customers: 10, originalSeries: 0, licensedContent: 10 },
-        { year: 2010, customers: 12, originalSeries: 0, licensedContent: 12 },
-        { year: 2011, customers: 15, originalSeries: 0, licensedContent: 15 },
-        { year: 2012, customers: 18, originalSeries: 0, licensedContent: 13 },
-        { year: 2013, customers: 25, originalSeries: 5, licensedContent: 15 },
-        { year: 2014, customers: 40, originalSeries: 10, licensedContent: 20 },
-        { year: 2015, customers: 55, originalSeries: 20, licensedContent: 25 },
-        { year: 2016, customers: 75, originalSeries: 30, licensedContent: 30 },
-        { year: 2017, customers: 90, originalSeries: 45, licensedContent: 30 },
-        { year: 2018, customers: 110, originalSeries: 60, licensedContent: 30 },
-        { year: 2019, customers: 130, originalSeries: 80, licensedContent: 30 },
-        { year: 2020, customers: 160, originalSeries: 100, licensedContent: 40 },
-    ];
+    d3.csv("data/data.csv").then(data => {
+        data.forEach(d => {
+            d.year = +d.year;
+            d.originalSeries = +d.originalSeries;
+            d.licensedContent = +d.licensedContent;
+        });
 
-    const svg = d3.select("#combinedChart")
-        .append("svg")
-        .attr("width", 800)
-        .attr("height", 400)
-        .append("g")
-        .attr("transform", "translate(100,50)");
+        const svgWidth = 900;
+        const svgHeight = 600;
+        const margin = { top: 50, right: 150, bottom: 50, left: 100 };
+        const width = svgWidth - margin.left - margin.right;
+        const height = svgHeight - margin.top - margin.bottom;
 
-    const xScale = d3.scaleBand()
-        .domain(combinedData.map(d => d.year))
-        .range([0, 700])
-        .padding(0.1);
+        const svg = d3.select("#combinedChart")
+            .append("svg")
+            .attr("width", svgWidth)
+            .attr("height", svgHeight)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    const yScaleCustomers = d3.scaleLinear()
-        .domain([0, d3.max(combinedData, d => d.customers)])
-        .nice()
-        .range([300, 0]);
+        const xScale = d3.scaleBand()
+            .domain(d3.range(2009, 2021))
+            .range([0, width])
+            .padding(0.1);
 
-    const yScaleViewership = d3.scaleLinear()
-        .domain([0, d3.max(combinedData, d => Math.max(d.originalSeries, d.licensedContent))])
-        .nice()
-        .range([300, 0]);
+        const yScaleViewership = d3.scaleLinear()
+            .domain([0, d3.max(data, d => Math.max(d.originalSeries, d.licensedContent))])
+            .nice()
+            .range([height, 0]);
 
-    svg.append("g")
-        .attr("transform", "translate(0,300)")
-        .call(d3.axisBottom(xScale).tickFormat(d3.format("d")));
+        svg.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(xScale).tickFormat(d3.format("d")));
 
-    svg.append("g")
-        .attr("class", "y axis customers")
-        .call(d3.axisLeft(yScaleCustomers).ticks(10))
-        .append("text")
-        .attr("fill", "#007BFF")
-        .attr("transform", "rotate(-90)")
-        .attr("y", -50)
-        .attr("dy", "0.71em")
-        .attr("text-anchor", "end")
-        .text("Customers (millions)");
+        svg.append("g")
+            .attr("class", "y axis viewership")
+            .call(d3.axisLeft(yScaleViewership).ticks(10))
+            .append("text")
+            .attr("fill", "#32CD32")
+            .attr("transform", "rotate(-90)")
+            .attr("y", -50)
+            .attr("dy", "0.71em")
+            .attr("text-anchor", "end")
+            .text("Viewership (millions)");
 
-    svg.append("g")
-        .attr("class", "y axis viewership")
-        .attr("transform", "translate(700,0)")
-        .call(d3.axisRight(yScaleViewership).ticks(10))
-        .append("text")
-        .attr("fill", "#32CD32")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 50)
-        .attr("dy", "0.71em")
-        .attr("text-anchor", "end")
-        .text("Viewership (millions)");
+        svg.append("line")
+            .attr("x1", xScale(2013) + xScale.bandwidth() / 2)
+            .attr("x2", xScale(2013) + xScale.bandwidth() / 2)
+            .attr("y1", 0)
+            .attr("y2", height)
+            .attr("stroke", "red")
+            .attr("stroke-width", 2)
+            .attr("stroke-dasharray", "4");
 
-    const lineCustomers = d3.line()
-        .x(d => xScale(d.year) + xScale.bandwidth() / 2)
-        .y(d => yScaleCustomers(d.customers));
+        svg.append("text")
+            .attr("x", xScale(2013) + xScale.bandwidth() / 2)
+            .attr("y", -10)
+            .attr("fill", "red")
+            .attr("text-anchor", "middle")
+            .text("2013: House of Cards Release");
 
-    const lineOriginal = d3.line()
-        .x(d => xScale(d.year) + xScale.bandwidth() / 2)
-        .y(d => yScaleViewership(d.originalSeries));
+        const legend = svg.append("g")
+            .attr("transform", "translate(50,0)");
 
-    const lineLicensed = d3.line()
-        .x(d => xScale(d.year) + xScale.bandwidth() / 2)
-        .y(d => yScaleViewership(d.licensedContent));
+        legend.append("rect")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("width", 10)
+            .attr("height", 10)
+            .attr("fill", "#FFA500");
 
-    svg.append("path")
-        .datum(combinedData)
-        .attr("class", "line customers")
-        .attr("fill", "none")
-        .attr("stroke", "#007BFF")
-        .attr("stroke-width", 2)
-        .attr("d", lineCustomers);
+        legend.append("text")
+            .attr("x", 15)
+            .attr("y", 10)
+            .text("Original Series");
 
-    svg.append("path")
-        .datum(combinedData)
-        .attr("class", "line originalSeries")
-        .attr("fill", "none")
-        .attr("stroke", "#FFA500")
-        .attr("stroke-width", 2)
-        .attr("d", lineOriginal);
+        legend.append("rect")
+            .attr("x", 0)
+            .attr("y", 20)
+            .attr("width", 10)
+            .attr("height", 10)
+            .attr("fill", "#32CD32");
 
-    svg.append("path")
-        .datum(combinedData)
-        .attr("class", "line licensedContent")
-        .attr("fill", "none")
-        .attr("stroke", "#32CD32")
-        .attr("stroke-width", 2)
-        .attr("d", lineLicensed);
+        legend.append("text")
+            .attr("x", 15)
+            .attr("y", 30)
+            .text("Licensed Content");
 
-    svg.append("line")
-        .attr("x1", xScale(2013) + xScale.bandwidth() / 2)
-        .attr("x2", xScale(2013) + xScale.bandwidth() / 2)
-        .attr("y1", 0)
-        .attr("y2", 300)
-        .attr("stroke", "red")
-        .attr("stroke-width", 2)
-        .attr("stroke-dasharray", "4");
+        // Tooltip
+        const tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("position", "absolute")
+            .style("background", "lightsteelblue")
+            .style("padding", "5px")
+            .style("border-radius", "5px")
+            .style("pointer-events", "none")
+            .style("opacity", 0);
 
-    svg.append("text")
-        .attr("x", xScale(2013))
-        .attr("y", 20)
-        .attr("fill", "red")
-        .text("2013: House of Cards Release");
+        const showTooltip = (event, d) => {
+            tooltip.transition().duration(200).style("opacity", 0.9);
+            tooltip.html(`Year: ${d.year}<br>Original Series: ${d.originalSeries}M<br>Licensed Content: ${d.licensedContent}M`)
+                .style("left", (event.pageX + 5) + "px")
+                .style("top", (event.pageY - 28) + "px");
+        };
 
-    const legend = svg.append("g")
-        .attr("transform", "translate(50,0)"); // Adjusted transform to move legend to the middle
+        const hideTooltip = () => {
+            tooltip.transition().duration(500).style("opacity", 0);
+        };
 
-    legend.append("rect")
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr("width", 10)
-        .attr("height", 10)
-        .attr("fill", "#007BFF");
+        // Define arrowhead marker
+        svg.append("defs").append("marker")
+            .attr("id", "arrow")
+            .attr("viewBox", "0 -5 10 10")
+            .attr("refX", 5)
+            .attr("refY", 0)
+            .attr("markerWidth", 4)
+            .attr("markerHeight", 4)
+            .attr("orient", "auto")
+            .append("path")
+            .attr("d", "M0,-5L10,0L0,5")
+            .attr("fill", "black");
 
-    legend.append("text")
-        .attr("x", 15)
-        .attr("y", 10)
-        .text("Customers");
+        const annotations = [
+            { x: 2013, y: 5, dx: 50, dy: -40, color: "#FFA500", text: "Significant rise in viewership after 'House of Cards'.", line: "originalSeries" },
+            { x: 2018, y: 13, dx: -50, dy: -100, color: "#32CD32", text: "Licensed content maintains steady viewership.", line: "licensedContent" },
+            { x: 2019, y: 60, dx: -190, dy: -30, color: "#FFA500", text: "Original series continue to grow in popularity.", line: "originalSeries" }
+        ];
 
-    legend.append("rect")
-        .attr("x", 0)
-        .attr("y", 20)
-        .attr("width", 10)
-        .attr("height", 10)
-        .attr("fill", "#FFA500");
+        const filterDropdown = d3.select("#filterDropdown");
 
-    legend.append("text")
-        .attr("x", 15)
-        .attr("y", 30)
-        .text("Original Series");
+        const updateVisibility = () => {
+            const selectedRegion = filterDropdown.property("value");
+            const filteredData = data.filter(d => d.region === selectedRegion);
 
-    legend.append("rect")
-        .attr("x", 0)
-        .attr("y", 40)
-        .attr("width", 10)
-        .attr("height", 10)
-        .attr("fill", "#32CD32");
+            svg.selectAll(".line, .dot, .annotation").remove(); // Remove existing elements
 
-    legend.append("text")
-        .attr("x", 15)
-        .attr("y", 50)
-        .text("Licensed Content");
+            const maxViewership = d3.max(filteredData, d => Math.max(d.originalSeries, d.licensedContent));
+            yScaleViewership.domain([0, maxViewership]).nice();
 
-    // Tooltip
-    const tooltip = d3.select("body").append("div")
-        .attr("class", "tooltip")
-        .style("position", "absolute")
-        .style("background", "lightsteelblue")
-        .style("padding", "5px")
-        .style("border-radius", "5px")
-        .style("pointer-events", "none")
-        .style("opacity", 0);
+            svg.select(".y.axis.viewership").transition().duration(500).call(d3.axisLeft(yScaleViewership).ticks(10));
 
-    const showTooltip = (event, d) => {
-        tooltip.transition().duration(200).style("opacity", 0.9);
-        tooltip.html(`Year: ${d.year}<br>Customers: ${d.customers}M<br>Original Series: ${d.originalSeries}M<br>Licensed Content: ${d.licensedContent}M`)
-            .style("left", (event.pageX + 5) + "px")
-            .style("top", (event.pageY - 28) + "px");
-    };
+            const lineOriginal = d3.line()
+                .x(d => xScale(d.year) + xScale.bandwidth() / 2)
+                .y(d => yScaleViewership(d.originalSeries));
 
-    const hideTooltip = () => {
-        tooltip.transition().duration(500).style("opacity", 0);
-    };
+            const lineLicensed = d3.line()
+                .x(d => xScale(d.year) + xScale.bandwidth() / 2)
+                .y(d => yScaleViewership(d.licensedContent));
 
-    svg.selectAll(".dot")
-        .data(combinedData)
-        .enter().append("circle")
-        .attr("class", "dot")
-        .attr("cx", d => xScale(d.year) + xScale.bandwidth() / 2)
-        .attr("cy", d => yScaleCustomers(d.customers))
-        .attr("r", 5)
-        .attr("fill", "#007BFF")
-        .on("mouseover", showTooltip)
-        .on("mouseout", hideTooltip);
+            svg.append("path")
+                .datum(filteredData)
+                .attr("class", "line originalSeries")
+                .attr("fill", "none")
+                .attr("stroke", "#FFA500")
+                .attr("stroke-width", 2)
+                .attr("d", lineOriginal);
 
-    svg.selectAll(".dot-original")
-        .data(combinedData)
-        .enter().append("circle")
-        .attr("class", "dot-original")
-        .attr("cx", d => xScale(d.year) + xScale.bandwidth() / 2)
-        .attr("cy", d => yScaleViewership(d.originalSeries))
-        .attr("r", 5)
-        .attr("fill", "#FFA500")
-        .on("mouseover", showTooltip)
-        .on("mouseout", hideTooltip);
+            svg.append("path")
+                .datum(filteredData)
+                .attr("class", "line licensedContent")
+                .attr("fill", "none")
+                .attr("stroke", "#32CD32")
+                .attr("stroke-width", 2)
+                .attr("d", lineLicensed);
 
-    svg.selectAll(".dot-licensed")
-        .data(combinedData)
-        .enter().append("circle")
-        .attr("class", "dot-licensed")
-        .attr("cx", d => xScale(d.year) + xScale.bandwidth() / 2)
-        .attr("cy", d => yScaleViewership(d.licensedContent))
-        .attr("r", 5)
-        .attr("fill", "#32CD32")
-        .on("mouseover", showTooltip)
-        .on("mouseout", hideTooltip);
+            svg.selectAll(".dot-original")
+                .data(filteredData)
+                .enter().append("circle")
+                .attr("class", "dot-original")
+                .attr("cx", d => xScale(d.year) + xScale.bandwidth() / 2)
+                .attr("cy", d => yScaleViewership(d.originalSeries))
+                .attr("r", 5)
+                .attr("fill", "#FFA500")
+                .on("mouseover", showTooltip)
+                .on("mouseout", hideTooltip);
 
-    // Filter
-    const filterDropdown = d3.select("#filterDropdown");
+            svg.selectAll(".dot-licensed")
+                .data(filteredData)
+                .enter().append("circle")
+                .attr("class", "dot-licensed")
+                .attr("cx", d => xScale(d.year) + xScale.bandwidth() / 2)
+                .attr("cy", d => yScaleViewership(d.licensedContent))
+                .attr("r", 5)
+                .attr("fill", "#32CD32")
+                .on("mouseover", showTooltip)
+                .on("mouseout", hideTooltip);
 
-    const updateVisibility = () => {
-        const selectedValue = filterDropdown.property("value");
-        svg.selectAll(".line, .dot").style("display", selectedValue === "all" || selectedValue === "customers" ? null : "none");
-        svg.selectAll(".line.originalSeries, .dot-original").style("display", selectedValue === "all" || selectedValue === "originalSeries" ? null : "none");
-        svg.selectAll(".line.licensedContent, .dot-licensed").style("display", selectedValue === "all" || selectedValue === "licensedContent" ? null : "none");
-    };
+            annotations.forEach(annotation => {
+                const dataPoint = filteredData.find(d => d.year === annotation.x);
+                if (dataPoint) {
+                    const yValue = annotation.line === "originalSeries" ? yScaleViewership(dataPoint.originalSeries) : yScaleViewership(dataPoint.licensedContent);
+                    svg.append("line")
+                        .attr("class", "annotation")
+                        .attr("x1", xScale(annotation.x) + xScale.bandwidth() / 2)
+                        .attr("y1", yValue)
+                        .attr("x2", xScale(annotation.x) + xScale.bandwidth() / 2 + annotation.dx)
+                        .attr("y2", yValue + annotation.dy)
+                        .attr("stroke", annotation.color)
+                        .attr("stroke-width", 1)
+                        .attr("marker-end", "url(#arrow)");
 
-    filterDropdown.on("change", updateVisibility);
+                    svg.append("text")
+                        .attr("class", "annotation")
+                        .attr("x", xScale(annotation.x) + xScale.bandwidth() / 2 + annotation.dx + 5)
+                        .attr("y", yValue + annotation.dy)
+                        .attr("fill", annotation.color)
+                        .attr("font-size", "12px")
+                        .attr("text-anchor", "start")
+                        .text(annotation.text);
+                }
+            });
+        };
 
-    updateVisibility();
+        filterDropdown.on("change", updateVisibility);
+
+        updateVisibility();
+    });
 });
-    
