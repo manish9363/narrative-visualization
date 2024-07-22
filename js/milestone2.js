@@ -6,9 +6,9 @@ document.addEventListener("DOMContentLoaded", function () {
             d.licensedContent = +d.licensedContent;
         });
 
-        const svgWidth = 900;
-        const svgHeight = 600;
-        const margin = { top: 50, right: 150, bottom: 50, left: 100 };
+        const svgWidth = 1200; // Increase the width of the SVG
+        const svgHeight = 500;
+        const margin = { top: 50, right: 150, bottom: 50, left: 50 }; // Reduce the left margin
         const width = svgWidth - margin.left - margin.right;
         const height = svgHeight - margin.top - margin.bottom;
 
@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const xScale = d3.scaleBand()
             .domain(d3.range(2009, 2021))
-            .range([0, width])
+            .range([0, width]) // Adjust the range to start from 0
             .padding(0.1);
 
         const yScaleViewership = d3.scaleLinear()
@@ -37,11 +37,12 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("class", "y axis viewership")
             .call(d3.axisLeft(yScaleViewership).ticks(10))
             .append("text")
-            .attr("fill", "#32CD32")
+            .attr("fill", "black")
             .attr("transform", "rotate(-90)")
             .attr("y", -50)
             .attr("dy", "0.71em")
             .attr("text-anchor", "end")
+            .attr("font-size", "14px")
             .text("Viewership (millions)");
 
         svg.append("line")
@@ -122,9 +123,9 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("fill", "black");
 
         const annotations = [
-            { x: 2013, y: 5, dx: 50, dy: -40, color: "#FFA500", text: "Significant rise in viewership after 'House of Cards'.", line: "originalSeries" },
-            { x: 2018, y: 13, dx: -50, dy: -100, color: "#32CD32", text: "Licensed content maintains steady viewership.", line: "licensedContent" },
-            { x: 2019, y: 60, dx: -190, dy: -30, color: "#FFA500", text: "Original series continue to grow in popularity.", line: "originalSeries" }
+            { x: 2013, y: 5, dx: 30, dy: -40, color: "#FFA500", text: "Significant rise in viewership after 'House of Cards'.", line: "originalSeries" },
+            { x: 2018, y: 13, dx: -300, dy: -100, color: "#32CD32", text: "Licensed content maintains steady viewership.", line: "licensedContent" },
+            { x: 2019, y: 60, dx: -350, dy: -30, color: "#FFA500", text: "Original series continue to grow in popularity.", line: "originalSeries" }
         ];
 
         const filterDropdown = d3.select("#filterDropdown");
@@ -209,9 +210,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         .attr("x", xScale(annotation.x) + xScale.bandwidth() / 2 + annotation.dx + 5)
                         .attr("y", yValue + annotation.dy)
                         .attr("fill", annotation.color)
-                        .attr("font-size", "12px")
+                        .attr("font-size", "10px")
                         .attr("text-anchor", "start")
-                        .text(annotation.text);
+                        .text(`${annotation.text} Original: ${dataPoint.originalSeries}M, Licensed: ${dataPoint.licensedContent}M`);
                 }
             });
         };
