@@ -164,6 +164,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 .attr("stroke-width", 2)
                 .attr("d", lineLicensed);
 
+            // Ensure old circles are removed before adding new ones
+            svg.selectAll(".dot-original").remove();
+            svg.selectAll(".dot-licensed").remove();
+
             svg.selectAll(".dot-original")
                 .data(filteredData)
                 .enter().append("circle")
