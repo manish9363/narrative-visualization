@@ -44,10 +44,11 @@ document.addEventListener("DOMContentLoaded", function () {
             "Sci-Fi & Fantasy": "Sci-Fi",
             "Documentaries": "Docs",
             "British TV Shows": "British TV",
+            "Dramas": "Dramas",
             // Add more mappings as needed
         };
 
-        const diameter = 600;
+        const diameter = 550;
         const color = d3.scaleOrdinal(d3.schemeCategory10);
 
         const bubble = d3.pack()
@@ -56,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const svg = d3.select("#combinedChart")
             .append("svg")
-            .attr("width", diameter)
+            .attr("width", diameter + 300) // Increased width to accommodate annotations
             .attr("height", diameter)
             .attr("class", "bubble");
 
@@ -71,6 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const renderBubbles = (data, isCountry = true) => {
             svg.selectAll(".node").remove();
+            svg.selectAll(".annotation").remove();
 
             const root = d3.hierarchy({ children: data })
                 .sum(d => d.count * 0.05); // Adjust the scaling factor here to make circles smaller
@@ -81,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 .data(root.children)
                 .enter().append("g")
                 .attr("class", "node")
-                .attr("transform", d => `translate(${d.x},${d.y})`);
+                .attr("transform", d => `translate(${d.x + 150},${d.y})`); // Move circles to the right to make space for annotations
 
             nodes.append("circle")
                 .attr("r", d => d.r)
@@ -134,6 +136,70 @@ document.addEventListener("DOMContentLoaded", function () {
                 .on("mouseout", function () {
                     tooltip.transition().duration(500).style("opacity", 0);
                 });
+
+            // Add annotations for the US or Dramas
+            if (isCountry) {
+                const usData = data.find(d => d.country === "United States");
+                if (usData) {
+                    const usNode = nodes.filter(d => d.data.country === "United States");
+
+                    svg.append("text")
+                        .attr("class", "annotation")
+                        .attr("x", 50) // Adjust the position for visibility
+                        .attr("y", 50)
+                        .attr("text-anchor", "start")
+                        .attr("font-size", "12px")
+                        .attr("fill", "black")
+                        .text(`US Titles: ${usData.count}`);
+
+                    svg.append("line")
+                        .attr("class", "annotation")
+                        .attr("x1", usNode.datum().x + 150) // Move x position to the right to match new bubble position
+                        .attr("y1", usNode.datum().y)
+                        .attr("x2", 100) // Adjust the position for visibility
+                        .attr("y2", 50)
+                        .attr("stroke", "black")
+                        .attr("stroke-width", 2)
+                        .attr("marker-end", "url(#arrow)");
+                }
+            } else {
+                const dramaData = data.find(d => d.genre === "Dramas");
+                if (dramaData) {
+                    const dramaNode = nodes.filter(d => d.data.genre === "Dramas");
+
+                    svg.append("text")
+                        .attr("class", "annotation")
+                        .attr("x", 50) // Adjust the position for visibility
+                        .attr("y", 100)
+                        .attr("text-anchor", "start")
+                        .attr("font-size", "12px")
+                        .attr("fill", "black")
+                        .text(`Dramas: ${dramaData.count}`);
+
+                    svg.append("line")
+                        .attr("class", "annotation")
+                        .attr("x1", dramaNode.datum().x + 150) // Move x position to the right to match new bubble position
+                        .attr("y1", dramaNode.datum().y)
+                        .attr("x2", 100) // Adjust the position for visibility
+                        .attr("y2", 100)
+                        .attr("stroke", "black")
+                        .attr("stroke-width", 2)
+                        .attr("marker-end", "url(#arrow)");
+                }
+            }
+
+            // Define arrowhead marker
+            svg.append("defs").append("marker")
+                .attr("id", "arrow")
+                .attr("viewBox", "0 -5 10 10")
+                .attr("refX", 5)
+                .attr("refY", 0)
+                .attr("markerWidth", 4)
+                .attr("markerHeight", 4)
+                .attr("orient", "auto")
+                .append("path")
+                .attr("d", "M0,-5L10,0L0,5")
+                .attr("fill", "black");
         };
 
         renderBubbles(filteredCountryCounts);
@@ -142,3 +208,4 @@ document.addEventListener("DOMContentLoaded", function () {
         d3.select("#genreButton").on("click", () => renderBubbles(filteredGenreCounts, false));
     });
 });
+

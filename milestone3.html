@@ -6,22 +6,70 @@
     <title>Milestone 3: Netflix Distribution</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        .button {
+            background-color: #007BFF;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 2px;
+            cursor: pointer;
+            border-radius: 12px;
+            transition-duration: 0.4s;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+
+        .buttons {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .annotation {
+            font-size: 12px;
+            fill: black;
+        }
+
+        .highlighted-text {
+            font-weight: bold;
+            color: #e50914;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .highlighted-text span {
+            background-color: yellow;
+            padding: 2px 5px;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Netflix Distribution</h1>
+            <h1>Netflix Expansion</h1>
         </div>
         <div class="content">
             <div class="description">
                 <p>
-                    Netflix's expansion into original content and distribution in multiple regions has significantly increased its viewership. Below, you can see the distribution of Netflix content by country and by genre. Use the buttons to switch between visualizations.
+                    Netflix's expansion into original content and distribution in multiple regions has significantly increased its viewership. Below, you can see the distribution of Netflix content by country and by genre. Use the buttons below to switch between visualizations.
+                </p>
+                <p class="highlighted-text">
+                    Content distribution: <span>click the buttons below</span> to view different distributions.
                 </p>
             </div>
+            <div class="buttons">
+                <button id="countryButton" class="button">Country Distribution</button>
+                <button id="genreButton" class="button">Genre Distribution</button>
+            </div>
             <div class="visualization">
-                <h3>Content distribution</h3>
-                <button id="countryButton">Country Distribution</button>
-                <button id="genreButton">Genre Distribution</button>
                 <div id="combinedChart"></div>
             </div>
             <div class="navigation">
