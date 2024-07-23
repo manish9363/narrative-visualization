@@ -3,24 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Milestone 3: Netflix Global Expansion</title>
+    <title>Milestone 3: Netflix Distribution</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://d3js.org/d3.v6.min.js"></script>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Netflix Available in 190 Countries</h1>
+            <h1>Netflix Distribution</h1>
         </div>
         <div class="content">
             <div class="description">
-                <p>Netflix's expansion to 190 countries has significantly increased its customer base and global presence. This milestone shows the major country launches and their impact on customer growth.</p>
+                <p>
+                    Netflix's expansion into original content and distribution in multiple regions has significantly increased its viewership. Below, you can see the distribution of Netflix content by country and by genre. Use the buttons to switch between visualizations.
+                </p>
             </div>
             <div class="visualization">
-                <h3>Customer Growth Over the Years</h3>
-                <div id="customerGrowthChart"></div>
-                <h3>Major Country Launches</h3>
-                <div id="countryLaunchesChart"></div>
+                <h3>Content distribution</h3>
+                <button id="countryButton">Country Distribution</button>
+                <button id="genreButton">Genre Distribution</button>
+                <div id="combinedChart"></div>
             </div>
             <div class="navigation">
                 <button onclick="window.history.back()">Back to Main Page</button>
