@@ -300,7 +300,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("stroke-dasharray", totalLength + " " + totalLength)
             .attr("stroke-dashoffset", totalLength)
             .transition()
-            .duration(5000)
+            .duration(3000)  // Reduced duration for faster transition
             .ease(d3.easeLinear)
             .attr("stroke-dashoffset", totalLength - firstMilestoneLength) // Animate up to the first milestone
             .on("end", () => {
