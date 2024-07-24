@@ -3,142 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Netflix Titles and Customer Growth Over the Years</title>
+  <title>Key Milestones in Netflix's Evolution</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="https://d3js.org/d3.v6.min.js"></script>
-  <style>
-    .container {
-      width: 80%;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #ffffff; /* White background */
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .header {
-      background-color: #e50914; /* Netflix Red */
-      color: white;
-      padding: 20px;
-      text-align: center;
-      border-radius: 10px 10px 0 0;
-    }
-
-    .description {
-      margin-bottom: 20px;
-      line-height: 1.6;
-      font-size: 16px;
-      text-align: center;
-    }
-
-    .slider-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 20px;
-      position: relative;
-    }
-
-    .slider-wrapper {
-      display: flex;
-      align-items: center;
-      width: 80%;
-      margin: 10px 0;
-    }
-
-    .slider-label {
-      font-weight: bold;
-      margin: 0 10px;
-    }
-
-    .slider {
-      width: 80%;
-      margin: 0 10px;
-      -webkit-appearance: none;
-      appearance: none;
-      background: linear-gradient(to right, #007BFF, #87CEEB); /* Blue slider track */
-      border-radius: 5px;
-      height: 6px; /* Reduced height */
-      outline: none;
-    }
-
-    .slider::-webkit-slider-thumb {
-      width: 12px; /* Reduced thumb size */
-      height: 12px; /* Reduced thumb size */
-      background: #e50914; /* Netflix Red for the slider thumb */
-      cursor: pointer;
-      -webkit-appearance: none;
-      appearance: none;
-      border-radius: 50%;
-    }
-
-    .slider::-moz-range-thumb {
-      width: 12px; /* Reduced thumb size */
-      height: 12px; /* Reduced thumb size */
-      background: #e50914; /* Netflix Red for the slider thumb */
-      cursor: pointer;
-      border-radius: 50%;
-    }
-
-    .milestone-mark {
-      position: absolute;
-      top: -20px;
-      width: 2px;
-      height: 20px;
-      background: #e50914; /* Netflix Red for milestone marks */
-    }
-
-    .dynamic-text-container {
-      text-align: center;
-      font-size: 18px;
-      color: #333333;
-      background: lightsteelblue;
-      padding: 10px;
-      border-radius: 5px;
-      margin-top: 20px;
-    }
-
-    .dynamic-text {
-      font-size: 18px;
-      color: black;
-      padding: 10px;
-      border-radius: 5px;
-    }
-
-    .tooltip {
-      position: absolute;
-      background: lightsteelblue;
-      padding: 5px;
-      border-radius: 5px;
-      pointer-events: none;
-      opacity: 0;
-    }
-
-    .navigation {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    button {
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      margin: 5px;
-      cursor: pointer;
-      border-radius: 5px;
-      transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-  </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>Netflix Titles and Customer Growth Over the Years</h1>
+      <h1>Key Milestones in Netflix's Evolution</h1>
     </div>
     <div class="description">
       <p>

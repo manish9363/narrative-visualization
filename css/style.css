@@ -1,6 +1,6 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f0f0f0; /* Light Gray background */
+  background-color: #f0f8ff; /* Light blue background */
   color: #333333; /* Dark text for contrast */
   margin: 0;
   padding: 0;
@@ -10,7 +10,9 @@ body {
   width: 80%;
   margin: 0 auto;
   padding: 20px;
-  position: relative; /* Add this line */
+  background-color: #ffffff; /* White background */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .slide {
@@ -25,7 +27,7 @@ body {
 }
 
 .header {
-  background-color: #e50914; /* Netflix Red */
+  background-color: #e50914; /* Deep orange */
   color: white;
   padding: 7px 0;
   text-align: center;
@@ -62,7 +64,8 @@ body {
 .description {
   margin-bottom: 20px;
   line-height: 1.6;
-  color: #333333; /* Dark text for description */
+  font-size: 16px;
+  text-align: center;
 }
 
 .source {
@@ -323,4 +326,112 @@ button:hover {
   fill: #333333;
 }
 
+.slider-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.slider-wrapper {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  margin: 10px 0;
+}
+
+.slider-label {
+  font-weight: bold;
+  margin: 0 10px;
+}
+
+.slider {
+  width: 80%;
+  margin: 0 10px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: linear-gradient(to right, #007BFF, #87CEEB); /* Blue slider track */
+  border-radius: 5px;
+  height: 6px; /* Reduced height */
+  outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+  width: 12px; /* Reduced thumb size */
+  height: 12px; /* Reduced thumb size */
+  background: #e50914; /* Netflix Red for the slider thumb */
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 50%;
+}
+
+.slider::-moz-range-thumb {
+  width: 12px; /* Reduced thumb size */
+  height: 12px; /* Reduced thumb size */
+  background: #e50914; /* Netflix Red for the slider thumb */
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+
+.milestone-mark {
+  position: absolute;
+  top: -20px;
+  width: 2px;
+  height: 20px;
+  background: #e50914; /* Netflix Red for milestone marks */
+}
+
+.dynamic-text-container {
+  text-align: center;
+  font-size: 18px;
+  color: #333333;
+  background: lightsteelblue;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
+.dynamic-text {
+  font-size: 18px;
+  color: black;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+
+.navigation {
+  text-align: center;
+  margin-top: 20px;
+}
+
+  button {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.content {
+  padding: 20px;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+
+.description {
+  margin-bottom: 20px;
+  line-height: 1.6;
+  text-align: justify;
+}
 
