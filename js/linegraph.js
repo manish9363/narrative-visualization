@@ -1,39 +1,32 @@
 document.addEventListener("DOMContentLoaded", function () {
     let dataByYear;
+    let customerDataByYear;
     let milestones;
     let tooltip;
 
-    d3.csv("data/netflix_titles.csv").then(function (data) {
-        console.log("CSV data loaded:", data);
-        // Calculate total titles
-        const totalTitles = data.length;
-        const totalTitlesElement = document.querySelector("#total-titles");
-        if (totalTitlesElement) {
-            totalTitlesElement.innerText = totalTitles;
-        }
+    Promise.all([
+        d3.csv("data/netflix_titles.csv"),
+        d3.csv("data/netflix_customer_growth_regions.csv")
+    ]).then(function (datasets) {
+        const data = datasets[0];
+        const customerData = datasets[1];
 
-        // Calculate content type distribution
-        const contentTypeCounts = d3.rollup(data, v => v.length, d => d.type);
-        const contentTypeDistribution = Array.from(contentTypeCounts, ([key, value]) => `${key}: ${value}`).join(", ");
-        const contentTypeElement = document.querySelector("#content-type");
-        if (contentTypeElement) {
-            contentTypeElement.innerText = contentTypeDistribution;
-        }
+        console.log("CSV data loaded:", data);
+        console.log("Customer data loaded:", customerData);
 
         milestones = [
             { year: 2007, description: "Netflix introduces streaming service.", link: "milestone1.html" },
             { year: 2013, description: "House of Cards, first original series.", link: "milestone2.html" },
-            { year: 2016, description: "Netflix available in 190 countries.", link: "milestone3.html" },
-            { year: 2020, description: "Netflix reaches 200 million subscribers.", link: "milestone4.html" }
+            { year: 2016, description: "Netflix available in 190 countries.", link: "milestone3.html" }
         ];
 
-        createDynamicLineGraphWithMilestones(data);
+        createDynamicLineGraphWithMilestones(data, customerData);
 
         // Set up slider
         const slider = document.getElementById("yearSlider");
         const yearLabel = document.getElementById("yearLabel");
-        slider.value = 2007;
-        yearLabel.innerText = 2007;
+        slider.value = 2005;
+        yearLabel.innerText = 2005;
 
         slider.addEventListener("input", function () {
             const year = parseInt(this.value);
@@ -41,60 +34,72 @@ document.addEventListener("DOMContentLoaded", function () {
             updateGraphForYear(year);
         });
     }).catch(function (error) {
-        console.error('Error loading the CSV file:', error);
+        console.error('Error loading the CSV files:', error);
     });
 
     function updateGraphForYear(year) {
         const svg = d3.select("#line-graph svg");
-        const margin = { top: 50, right: 20, bottom: 50, left: 60 };
+        const margin = { top: 50, right: 50, bottom: 50, left: 60 };
         const width = +svg.attr("width") - margin.left - margin.right;
         const height = +svg.attr("height") - margin.top - margin.bottom;
         const g = svg.select("g");
         const parseTime = d3.timeParse("%Y");
 
         const filteredData = dataByYear.filter(d => d.year.getFullYear() <= year);
+        const filteredCustomerData = customerDataByYear.filter(d => d.year.getFullYear() <= year);
 
         const x = d3.scaleTime()
-            .domain([parseTime("2000"), parseTime("2020")])
+            .domain([parseTime("2005"), parseTime("2020")])
             .range([0, width]);
 
         const y = d3.scaleLinear()
             .domain([0, d3.max(dataByYear, d => d.total)])
             .range([height, 0]);
 
+        const y2 = d3.scaleLinear()
+            .domain([0, 200]) // Adjusted for million notation
+            .range([height, 0]);
+
         const line = d3.line()
             .x(d => x(d.year))
             .y(d => y(d.total));
 
-        g.selectAll("path").remove(); // Remove existing paths before redrawing
-        g.selectAll(".x.axis").remove(); // Remove existing x-axis before redrawing
-        g.selectAll(".y.axis").remove(); // Remove existing y-axis before redrawing
+        const lineCustomer = d3.line()
+            .x(d => x(d.year))
+            .y(d => y2(d.customers / 1000000)); // Scale in millions
 
-        g.append("g")
-            .attr("class", "x axis")
-            .attr("transform", `translate(0,${height})`)
-            .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%Y")));
-
-        g.append("g")
-            .attr("class", "y axis")
-            .call(d3.axisLeft(y));
+        g.selectAll("path.titles-line").remove(); // Remove existing paths before redrawing
+        g.selectAll("path.customers-line").remove(); // Remove existing paths before redrawing
+        g.selectAll("circle.title-circle").remove(); // Remove existing circles before redrawing
+        g.selectAll("circle.customer-circle").remove(); // Remove existing circles before redrawing
+        g.selectAll(".milestone-line").remove(); // Remove existing milestone lines before redrawing
+        g.selectAll(".milestone-text").remove(); // Remove existing milestone texts before redrawing
 
         g.append("path")
             .datum(filteredData)
+            .attr("class", "titles-line")
             .attr("fill", "none")
-            .attr("stroke", "#87CEEB") /* Light Blue color for the line */
+            .attr("stroke", "#87CEEB") /* Light Blue color for the total titles line */
             .attr("stroke-width", 1.5)
             .attr("d", line);
 
-        const circles = g.selectAll("circle")
+        g.append("path")
+            .datum(filteredCustomerData)
+            .attr("class", "customers-line")
+            .attr("fill", "none")
+            .attr("stroke", "#FFA500") /* Orange color for the customer growth line */
+            .attr("stroke-width", 1.5)
+            .attr("d", lineCustomer);
+
+        const titleCircles = g.selectAll("circle.title-circle")
             .data(filteredData);
 
-        circles.enter().append("circle")
+        titleCircles.enter().append("circle")
+            .attr("class", "title-circle")
             .attr("r", 5)
             .attr("cx", d => x(d.year))
             .attr("cy", d => y(d.total))
             .attr("fill", d => milestones.some(m => m.year === d.year.getFullYear()) ? "#FF6347" : "#ADD8E6") /* Light Blue color for non-milestone circles, Tomato for milestones */
-            .attr("opacity", d => d.year.getFullYear() <= 2007 ? 1 : 0) // Initial opacity set to 0 for dots beyond the first milestone
             .on("mouseover", function (event, d) {
                 tooltip.transition()
                     .duration(200)
@@ -109,93 +114,66 @@ document.addEventListener("DOMContentLoaded", function () {
                     .style("opacity", 0);
             });
 
-        circles.attr("cx", d => x(d.year))
-            .attr("cy", d => y(d.total))
-            .attr("fill", d => milestones.some(m => m.year === d.year.getFullYear()) ? "#FF6347" : "#ADD8E6"); /* Light Blue color for non-milestone circles, Tomato for milestones */
+        const customerCircles = g.selectAll("circle.customer-circle")
+            .data(filteredCustomerData);
 
-        circles.exit().remove();
-
-        g.selectAll("g.milestone-box").remove(); // Remove existing milestone boxes
+        customerCircles.enter().append("circle")
+            .attr("class", "customer-circle")
+            .attr("r", 5)
+            .attr("cx", d => x(d.year))
+            .attr("cy", d => y2(d.customers / 1000000))
+            .attr("fill", "#FFA500") /* Orange color for customer data points */
+            .on("mouseover", function (event, d) {
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html(`Year: ${d.year.getFullYear()}<br>Customers: ${(d.customers / 1000000).toFixed(2)}M`)
+                    .style("left", (event.pageX + 5) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function () {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
 
         milestones.forEach((milestone, index) => {
-            const yearData = dataByYear.find(d => d.year.getFullYear() === milestone.year);
             if (milestone.year <= year) {
-                const boxGroup = g.append("g")
-                    .attr("class", `milestone-box milestone-box-${milestone.year}`);
+                g.append("line")
+                    .attr("class", "milestone-line")
+                    .attr("x1", x(parseTime(milestone.year)))
+                    .attr("x2", x(parseTime(milestone.year)))
+                    .attr("y1", 0)
+                    .attr("y2", height)
+                    .attr("stroke", "#FF6347")
+                    .attr("stroke-width", 2)
+                    .attr("stroke-dasharray", "4 2");
 
-                // Add milestone box
-                const boxWidth = 200; /* Increased width for clarity */
-                const boxHeight = 60; /* Increased height for clarity */
-                const offset = index % 2 === 0 ? 70 : -70; // Increased offset for better spacing
-                let xBox = x(parseTime(milestone.year)) + 15; // Further offset to the right
-                if (xBox + boxWidth > width) xBox -= (boxWidth + 20); // Adjust to stay within bounds
-                const yBox = y(yearData ? yearData.total : 0) - boxHeight - offset; // Further offset above or below
-
-                boxGroup.append("rect")
-                    .attr("x", xBox)
-                    .attr("y", yBox)
-                    .attr("width", boxWidth)
-                    .attr("height", boxHeight)
-                    .attr("fill", "lightyellow")
-                    .attr("stroke", "#007BFF") /* Blue border color */
-                    .attr("stroke-width", 2); /* Increased border thickness */
-
-                // Add milestone description text
-                boxGroup.append("text")
-                    .attr("x", xBox + 10)
-                    .attr("y", yBox + 20)
+                g.append("text")
+                    .attr("class", "milestone-text")
+                    .attr("x", x(parseTime(milestone.year)) + 5)
+                    .attr("y", 20)
                     .style("font-size", "12px")
-                    .style("fill", "#333333")
-                    .text(milestone.description);
+                    .style("fill", "#FF6347")
+                    .text(`Milestone ${index + 1}`);
 
-                // Add "Click for more details" link
-                boxGroup.append("a")
+                // Add button to go to milestone details
+                g.append("a")
                     .attr("xlink:href", milestone.link)
                     .attr("target", "_self")
                     .append("text")
-                    .attr("x", xBox + 10)
-                    .attr("y", yBox + 40)
+                    .attr("class", "milestone-text")
+                    .attr("x", x(parseTime(milestone.year)) + 5)
+                    .attr("y", 40)
                     .style("font-size", "12px")
                     .style("fill", "#007BFF")
                     .style("text-decoration", "underline")
-                    .text("Click for more details");
-
-                // Add arrow
-                boxGroup.append("line")
-                    .attr("x1", xBox)
-                    .attr("y1", yBox + boxHeight / 2)
-                    .attr("x2", x(parseTime(milestone.year)))
-                    .attr("y2", y(yearData ? yearData.total : 0))
-                    .attr("stroke", "black")
-                    .attr("marker-end", "url(#arrow)");
+                    .text("More details");
             }
         });
-
-        milestones.forEach(milestone => {
-            const boxGroup = g.selectAll(`.milestone-box-${milestone.year}`);
-
-            if (milestone.year > year) {
-                boxGroup.attr("opacity", 0);
-            } else {
-                boxGroup.attr("opacity", 1);
-            }
-        });
-
-        const dynamicText = d3.select(".dynamic-text-container");
-        const milestone = milestones.find(m => m.year === year);
-        if (milestone) {
-            dynamicText.html(`<a href="${milestone.link}" target="_self">${milestone.description}</a>`);
-        } else {
-            const yearData = dataByYear.find(d => d.year.getFullYear() === year);
-            if (yearData) {
-                dynamicText.text(`Year: ${year}, ${yearData.total} titles`);
-            } else {
-                dynamicText.text(`Year: ${year}, no data available`);
-            }
-        }
     }
 
-    function createDynamicLineGraphWithMilestones(data) {
+    function createDynamicLineGraphWithMilestones(data, customerData) {
         const svg = d3.select("#line-graph").append("svg")
             .attr("width", 1300) // Adjusted width
             .attr("height", 475); // Adjusted height
@@ -238,8 +216,8 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("offset", "100%")
             .attr("stop-color", "#ADD8E6"); /* Light Blue end color */
 
-        // Filter data from year 2000 onwards
-        const filteredData = data.filter(d => d.release_year >= 2000);
+        // Filter data from year 2005 onwards
+        const filteredData = data.filter(d => d.release_year >= 2005);
 
         dataByYear = Array.from(
             d3.rollup(filteredData, v => ({
@@ -250,17 +228,33 @@ document.addEventListener("DOMContentLoaded", function () {
             ([key, value]) => ({ year: parseTime(key), ...value })
         ).sort((a, b) => a.year - b.year);
 
+        // Aggregate customer data by year
+        customerDataByYear = Array.from(
+            d3.rollup(customerData, v => ({
+                customers: d3.sum(v, d => +d.customers)
+            }), d => d.year),
+            ([key, value]) => ({ year: parseTime(key), ...value })
+        ).sort((a, b) => a.year - b.year);
+
         const x = d3.scaleTime()
-            .domain([parseTime("2000"), parseTime("2020")])
+            .domain([parseTime("2005"), parseTime("2020")])
             .range([0, width]);
 
         const y = d3.scaleLinear()
             .domain([0, d3.max(dataByYear, d => d.total)])
             .range([height, 0]);
 
+        const y2 = d3.scaleLinear()
+            .domain([0, 200]) // Adjusted for million notation
+            .range([height, 0]);
+
         const line = d3.line()
             .x(d => x(d.year))
             .y(d => y(d.total));
+
+        const lineCustomer = d3.line()
+            .x(d => x(d.year))
+            .y(d => y2(d.customers / 1000000)); // Scale in millions
 
         g.append("g")
             .attr("class", "x axis")
@@ -269,45 +263,80 @@ document.addEventListener("DOMContentLoaded", function () {
 
         g.append("g")
             .attr("class", "y axis")
-            .call(d3.axisLeft(y));
+            .call(d3.axisLeft(y).ticks(10).tickFormat(d3.format("d"))); // Total Titles axis
 
-        // Add x-axis label
-        svg.append("text")
-            .attr("text-anchor", "middle")
-            .attr("transform", `translate(${margin.left + width / 2},${height + margin.top + 40})`)
-            .text("Year");
-
-        // Add y-axis label
-        svg.append("text")
-            .attr("text-anchor", "middle")
-            .attr("transform", `translate(${margin.left - 40},${margin.top + height / 2})rotate(-90)`)
+        g.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - margin.left)
+            .attr("x", 0 - (height / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
             .text("Total Titles");
 
-        const path = g.append("path")
+        g.append("g")
+            .attr("class", "y axis")
+            .attr("transform", `translate(${width},0)`)
+            .call(d3.axisRight(y2).ticks(10).tickFormat(d => d + "M")); // Customers axis
+
+        g.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", width + margin.right - 20)
+            .attr("x", 0 - (height / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("Customers (Millions)");
+
+        const pathTitles = g.append("path")
             .datum(dataByYear)
+            .attr("class", "titles-line")
             .attr("fill", "none")
             .attr("stroke", "url(#line-gradient)")
             .attr("stroke-width", 1.5)
             .attr("d", line);
 
-        // Dynamic transition
-        const totalLength = path.node().getTotalLength();
-        const firstMilestoneYear = 2007;
-        const firstMilestoneIndex = dataByYear.findIndex(d => d.year.getFullYear() === firstMilestoneYear);
-        const firstMilestoneLength = (firstMilestoneIndex / dataByYear.length) * totalLength;
+        const pathCustomers = g.append("path")
+            .datum(customerDataByYear)
+            .attr("class", "customers-line")
+            .attr("fill", "none")
+            .attr("stroke", "#FFA500") /* Orange color for the customer growth line */
+            .attr("stroke-width", 1.5)
+            .attr("d", lineCustomer);
 
-        path
-            .attr("stroke-dasharray", totalLength + " " + totalLength)
-            .attr("stroke-dashoffset", totalLength)
+        // Dynamic transition
+        const totalLengthTitles = pathTitles.node().getTotalLength();
+        const totalLengthCustomers = pathCustomers.node().getTotalLength();
+
+        // Set up slider
+        const slider = document.getElementById("yearSlider");
+        const yearLabel = document.getElementById("yearLabel");
+
+        pathTitles
+            .attr("stroke-dasharray", totalLengthTitles + " " + totalLengthTitles)
+            .attr("stroke-dashoffset", totalLengthTitles)
             .transition()
-            .duration(3000)  // Reduced duration for faster transition
+            .duration(8000) // Increase duration for complete animation
             .ease(d3.easeLinear)
-            .attr("stroke-dashoffset", totalLength - firstMilestoneLength) // Animate up to the first milestone
-            .on("end", () => {
-                console.log("Animation to first milestone complete.");
-                revealFirstMilestone();
-                enableSlider();
+            .attr("stroke-dashoffset", 0) // Animate to the end
+            .on("start", function () {
+                d3.active(this)
+                    .tween("year", function () {
+                        const interpolate = d3.interpolateNumber(2005, 2020);
+                        return function (t) {
+                            const year = Math.round(interpolate(t));
+                            yearLabel.innerText = year;
+                            slider.value = year;
+                            updateGraphForYear(year);
+                        };
+                    });
             });
+
+        pathCustomers
+            .attr("stroke-dasharray", totalLengthCustomers + " " + totalLengthCustomers)
+            .attr("stroke-dashoffset", totalLengthCustomers)
+            .transition()
+            .duration(8000) // Increase duration for complete animation
+            .ease(d3.easeLinear)
+            .attr("stroke-dashoffset", 0); // Animate to the end
 
         // Define tooltip at the higher scope
         tooltip = d3.select("body").append("div")
@@ -322,16 +351,39 @@ document.addEventListener("DOMContentLoaded", function () {
         g.selectAll("dot")
             .data(dataByYear)
             .enter().append("circle")
+            .attr("class", "title-circle")
             .attr("r", 5)
             .attr("cx", d => x(d.year))
             .attr("cy", d => y(d.total))
             .attr("fill", d => milestones.some(m => m.year === d.year.getFullYear()) ? "#FF6347" : "#ADD8E6") /* Light Blue color for non-milestone circles, Tomato for milestones */
-            .attr("opacity", d => d.year.getFullYear() <= 2007 ? 1 : 0) // Initial opacity set to 0 for dots beyond the first milestone
             .on("mouseover", function (event, d) {
                 tooltip.transition()
                     .duration(200)
                     .style("opacity", .9);
                 tooltip.html(`Year: ${d.year.getFullYear()}<br>Total: ${d.total}<br>Movies: ${d.movie}<br>TV Shows: ${d.tvShow}`)
+                    .style("left", (event.pageX + 5) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function () {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
+
+        // Add circles for customer data
+        g.selectAll(".customer-circle")
+            .data(customerDataByYear)
+            .enter().append("circle")
+            .attr("class", "customer-circle")
+            .attr("r", 5)
+            .attr("cx", d => x(d.year))
+            .attr("cy", d => y2(d.customers / 1000000))
+            .attr("fill", "#FFA500") /* Orange color for customer data points */
+            .on("mouseover", function (event, d) {
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html(`Year: ${d.year.getFullYear()}<br>Customers: ${(d.customers / 1000000).toFixed(2)}M`)
                     .style("left", (event.pageX + 5) + "px")
                     .style("top", (event.pageY - 28) + "px");
             })
@@ -353,87 +405,25 @@ document.addEventListener("DOMContentLoaded", function () {
             .style("border-radius", "5px")
             .style("margin-top", "10px");
 
-        // Animation for revealing the first milestone
-        function revealFirstMilestone() {
-            const milestone = milestones.find(m => m.year === firstMilestoneYear);
-            const yearData = dataByYear.find(d => d.year.getFullYear() === firstMilestoneYear);
-
-            const boxGroup = g.append("g")
-                .attr("class", `milestone-box milestone-box-${milestone.year}`);
-
-            // Add milestone box
-            const boxWidth = 200;
-            const boxHeight = 60;
-            const offset = firstMilestoneIndex % 2 === 0 ? 70 : -70;
-            let xBox = x(parseTime(milestone.year)) + 15;
-            if (xBox + boxWidth > width) xBox -= (boxWidth + 20);
-            const yBox = y(yearData ? yearData.total : 0) - boxHeight - offset;
-
-            boxGroup.append("rect")
-                .attr("x", xBox)
-                .attr("y", yBox)
-                .attr("width", boxWidth)
-                .attr("height", boxHeight)
-                .attr("fill", "lightyellow")
-                .attr("stroke", "#007BFF")
-                .attr("stroke-width", 2);
-
-            // Add milestone description text
-            boxGroup.append("text")
-                .attr("x", xBox + 10)
-                .attr("y", yBox + 20)
-                .style("font-size", "12px")
-                .style("fill", "#333333")
-                .text(milestone.description);
-
-            // Add "Click for more details" link
-            boxGroup.append("a")
-                .attr("xlink:href", milestone.link)
-                .attr("target", "_self")
-                .append("text")
-                .attr("x", xBox + 10)
-                .attr("y", yBox + 40)
-                .style("font-size", "12px")
-                .style("fill", "#007BFF")
-                .style("text-decoration", "underline")
-                .text("Click for more details");
-
-            // Add arrow
-            boxGroup.append("line")
-                .attr("x1", xBox)
-                .attr("y1", yBox + boxHeight / 2)
-                .attr("x2", x(parseTime(milestone.year)))
-                .attr("y2", y(yearData ? yearData.total : 0))
-                .attr("stroke", "black")
-                .attr("marker-end", "url(#arrow)");
-
-            // Show or hide the milestone link based on slider position
-            if (milestone.year > parseInt(document.getElementById("yearSlider").value)) {
-                boxGroup.attr("opacity", 0);
-            } else {
-                boxGroup.attr("opacity", 1);
-            }
-
-            // Update dynamic text
-            dynamicText.html(`<a href="${milestone.link}" target="_self">${milestone.description}</a>`);
-        }
-
         function enableSlider() {
-            // Enable slider for user interaction after animation completes
             const slider = document.getElementById("yearSlider");
             const yearLabel = document.getElementById("yearLabel");
 
-            slider.disabled = false; // Enable the slider
+            slider.disabled = false;
 
             slider.addEventListener("input", function () {
                 const year = parseInt(this.value);
                 yearLabel.innerText = year;
                 updateGraphForYear(year);
 
-                // Reveal dots gradually as the slider moves
-                g.selectAll("circle")
+                g.selectAll(".title-circle")
+                    .attr("opacity", d => d.year.getFullYear() <= year ? 1 : 0);
+
+                g.selectAll(".customer-circle")
                     .attr("opacity", d => d.year.getFullYear() <= year ? 1 : 0);
             });
         }
+
+        enableSlider();
     }
 });
