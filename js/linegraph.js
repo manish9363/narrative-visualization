@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .range([0, width]);
 
         const y = d3.scaleLinear()
-            .domain([0, d3.max(dataByYear, d => d.total)])
+            .domain([0, d3.max(dataByYear, d => d.cumulativeTotal)])
             .range([height, 0]);
 
         const y2 = d3.scaleLinear()
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const line = d3.line()
             .x(d => x(d.year))
-            .y(d => y(d.total));
+            .y(d => y(d.cumulativeTotal));
 
         const lineCustomer = d3.line()
             .x(d => x(d.year))
@@ -98,13 +98,13 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("class", "title-circle")
             .attr("r", 5)
             .attr("cx", d => x(d.year))
-            .attr("cy", d => y(d.total))
+            .attr("cy", d => y(d.cumulativeTotal))
             .attr("fill", d => milestones.some(m => m.year === d.year.getFullYear()) ? "#FF6347" : "#ADD8E6") /* Light Blue color for non-milestone circles, Tomato for milestones */
             .on("mouseover", function (event, d) {
                 tooltip.transition()
                     .duration(200)
                     .style("opacity", .9);
-                tooltip.html(`Year: ${d.year.getFullYear()}<br>Total: ${d.total}<br>Movies: ${d.movie}<br>TV Shows: ${d.tvShow}`)
+                tooltip.html(`Year: ${d.year.getFullYear()}<br>Total: ${d.cumulativeTotal}<br>Movies: ${d.cumulativeMovies}<br>TV Shows: ${d.cumulativeTvShows}`)
                     .style("left", (event.pageX + 5) + "px")
                     .style("top", (event.pageY - 28) + "px");
             })
@@ -150,43 +150,43 @@ document.addEventListener("DOMContentLoaded", function () {
                     .attr("stroke-dasharray", "4 2");
 
                 const boxGroup = g.append("g")
-                    .attr("class", "milestone-box");
+                    .attr("class", "milestone-box")
+                    .attr("transform", `translate(${x(parseTime(milestone.year)) - 100},${height / 2 - 70})`); // Adjusted position
 
                 // Add milestone box
                 const boxWidth = 200;
-                const boxHeight = 70;
-                const xBox = x(parseTime(milestone.year)) - boxWidth / 2;
-                const yBox = height / 2 - boxHeight / 2; // Center the box vertically
+                const boxHeight = 80;
 
                 boxGroup.append("rect")
-                    .attr("x", xBox)
-                    .attr("y", yBox)
                     .attr("width", boxWidth)
                     .attr("height", boxHeight)
+                    .attr("rx", 10)
+                    .attr("ry", 10)
                     .attr("fill", "lightyellow")
                     .attr("stroke", "#007BFF")
-                    .attr("stroke-width", 2);
+                    .attr("stroke-width", 2)
+                    .style("filter", "url(#drop-shadow)");
 
                 // Add milestone description text
                 boxGroup.append("text")
-                    .attr("x", xBox + 10)
-                    .attr("y", yBox + 20)
+                    .attr("x", 10)
+                    .attr("y", 20)
                     .style("font-size", "12px")
                     .style("fill", "#333333")
                     .text(milestone.description);
 
                 // Add title count
                 boxGroup.append("text")
-                    .attr("x", xBox + 10)
-                    .attr("y", yBox + 35)
+                    .attr("x", 10)
+                    .attr("y", 35)
                     .style("font-size", "12px")
                     .style("fill", "#333333")
                     .text(`Titles: ${milestone.titles}`);
 
                 // Add customer count
                 boxGroup.append("text")
-                    .attr("x", xBox + 10)
-                    .attr("y", yBox + 50)
+                    .attr("x", 10)
+                    .attr("y", 50)
                     .style("font-size", "12px")
                     .style("fill", "#333333")
                     .text(`Customers: ${milestone.customers}M`);
@@ -196,8 +196,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     .attr("xlink:href", milestone.link)
                     .attr("target", "_self")
                     .append("text")
-                    .attr("x", xBox + 10)
-                    .attr("y", yBox + 65)
+                    .attr("x", 10)
+                    .attr("y", 65)
                     .style("font-size", "12px")
                     .style("fill", "#007BFF")
                     .style("text-decoration", "underline")
@@ -249,12 +249,39 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("offset", "100%")
             .attr("stop-color", "#ADD8E6"); /* Light Blue end color */
 
+        // Define drop shadow filter
+        const defs = svg.append("defs");
+        const filter = defs.append("filter")
+            .attr("id", "drop-shadow")
+            .attr("height", "130%");
+
+        filter.append("feGaussianBlur")
+            .attr("in", "SourceAlpha")
+            .attr("stdDeviation", 3)
+            .attr("result", "blur");
+
+        filter.append("feOffset")
+            .attr("in", "blur")
+            .attr("dx", 2)
+            .attr("dy", 2)
+            .attr("result", "offsetBlur");
+
+        const feMerge = filter.append("feMerge");
+
+        feMerge.append("feMergeNode")
+            .attr("in", "offsetBlur");
+        feMerge.append("feMergeNode")
+            .attr("in", "SourceGraphic");
+
         // Filter data from year 2005 onwards
         const filteredData = data.filter(d => d.release_year >= 2005);
 
         dataByYear = Array.from(
             d3.rollup(filteredData, v => ({
                 total: v.length,
+                cumulativeTotal: v.reduce((acc, curr) => acc + 1, 0),
+                cumulativeMovies: v.filter(d => d.type === "Movie").reduce((acc, curr) => acc + 1, 0),
+                cumulativeTvShows: v.filter(d => d.type === "TV Show").reduce((acc, curr) => acc + 1, 0),
                 movie: v.filter(d => d.type === "Movie").length,
                 tvShow: v.filter(d => d.type === "TV Show").length
             }), d => d.release_year),
@@ -274,7 +301,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .range([0, width]);
 
         const y = d3.scaleLinear()
-            .domain([0, d3.max(dataByYear, d => d.total)])
+            .domain([0, d3.max(dataByYear, d => d.cumulativeTotal)])
             .range([height, 0]);
 
         const y2 = d3.scaleLinear()
@@ -283,7 +310,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const line = d3.line()
             .x(d => x(d.year))
-            .y(d => y(d.total));
+            .y(d => y(d.cumulativeTotal));
 
         const lineCustomer = d3.line()
             .x(d => x(d.year))
@@ -387,13 +414,13 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("class", "title-circle")
             .attr("r", 5)
             .attr("cx", d => x(d.year))
-            .attr("cy", d => y(d.total))
+            .attr("cy", d => y(d.cumulativeTotal))
             .attr("fill", d => milestones.some(m => m.year === d.year.getFullYear()) ? "#FF6347" : "#ADD8E6") /* Light Blue color for non-milestone circles, Tomato for milestones */
             .on("mouseover", function (event, d) {
                 tooltip.transition()
                     .duration(200)
                     .style("opacity", .9);
-                tooltip.html(`Year: ${d.year.getFullYear()}<br>Total: ${d.total}<br>Movies: ${d.movie}<br>TV Shows: ${d.tvShow}`)
+                tooltip.html(`Year: ${d.year.getFullYear()}<br>Total: ${d.cumulativeTotal}<br>Movies: ${d.cumulativeMovies}<br>TV Shows: ${d.cumulativeTvShows}`)
                     .style("left", (event.pageX + 5) + "px")
                     .style("top", (event.pageY - 28) + "px");
             })
