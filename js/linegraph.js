@@ -15,9 +15,9 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Customer data loaded:", customerData);
 
         milestones = [
-            { year: 2007, description: "Netflix introduces streaming service.", link: "milestone1.html", titles: 100, customers: 5 },
-            { year: 2013, description: "House of Cards, first original series.", link: "milestone2.html", titles: 200, customers: 10 },
-            { year: 2016, description: "Netflix available in 190 countries.", link: "milestone3.html", titles: 300, customers: 50 }
+            { year: 2007, description: "Netflix introduces streaming service.", link: "milestone1.html" },
+            { year: 2013, description: "House of Cards, first original series.", link: "milestone2.html" },
+            { year: 2016, description: "Netflix available in 190 countries.", link: "milestone3.html" }
         ];
 
         createDynamicLineGraphWithMilestones(data, customerData);
@@ -149,13 +149,20 @@ document.addEventListener("DOMContentLoaded", function () {
                     .attr("stroke-width", 2)
                     .attr("stroke-dasharray", "4 2");
 
+                // Calculate title and customer counts from the filtered data
+                const milestoneData = filteredData.find(d => d.year.getFullYear() === milestone.year);
+                const milestoneCustomerData = filteredCustomerData.find(d => d.year.getFullYear() === milestone.year);
+
+                const titles = milestoneData ? milestoneData.cumulativeTotal : 0;
+                const customers = milestoneCustomerData ? (milestoneCustomerData.customers / 1000000).toFixed(2) : 0;
+
                 const boxGroup = g.append("g")
                     .attr("class", "milestone-box")
                     .attr("transform", `translate(${x(parseTime(milestone.year)) - 100},${height / 2 - 70})`); // Adjusted position
 
                 // Add milestone box
                 const boxWidth = 200;
-                const boxHeight = 80;
+                const boxHeight = 90;
 
                 boxGroup.append("rect")
                     .attr("width", boxWidth)
@@ -181,7 +188,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     .attr("y", 35)
                     .style("font-size", "12px")
                     .style("fill", "#333333")
-                    .text(`Titles: ${milestone.titles}`);
+                    .text(`Titles: ${titles}`);
 
                 // Add customer count
                 boxGroup.append("text")
@@ -189,7 +196,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     .attr("y", 50)
                     .style("font-size", "12px")
                     .style("fill", "#333333")
-                    .text(`Customers: ${milestone.customers}M`);
+                    .text(`Customers: ${customers}M`);
 
                 // Add "More details" link
                 boxGroup.append("a")
@@ -480,7 +487,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("x", centerX + 40)
             .attr("y", -20) // Adjust position according to rect y value
             .style("font-size", "10px") // Smaller text size
-            .text("Titles Growth")
+            .text("Titles launched")
             .attr("alignment-baseline", "middle");
 
         g.append("line")
