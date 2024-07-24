@@ -393,17 +393,55 @@ document.addEventListener("DOMContentLoaded", function () {
                     .style("opacity", 0);
             });
 
-        // Add dynamic text at the bottom
-        const dynamicText = d3.select(".dynamic-text-container")
-            .append("div")
-            .attr("class", "dynamic-text")
-            .style("text-align", "center")
-            .style("font-size", "14px")
-            .style("color", "black")
-            .style("background", "lightsteelblue")
-            .style("padding", "10px")
-            .style("border-radius", "5px")
-            .style("margin-top", "10px");
+        // Add static annotations
+
+        // Add legend for line labels
+        // Calculate the center position for the legend
+// Calculate the center position for the legend
+// Calculate the center position for the legend
+const legendWidth = 350; // Total width of the legend box
+const centerX = (width - legendWidth) / 2; // Calculate the x position to center the legend
+
+g.append("rect")
+    .attr("x", centerX)
+    .attr("y", -40) // Move the legend more towards the top
+    .attr("width", legendWidth)
+    .attr("height", 30)
+    .attr("fill", "white")
+    .attr("stroke", "black");
+
+g.append("line")
+    .attr("x1", centerX + 10)
+    .attr("y1", -25) // Adjust position according to rect y value
+    .attr("x2", centerX + 30)
+    .attr("y2", -25)
+    .attr("stroke", "#87CEEB")
+    .attr("stroke-width", 1.5);
+
+g.append("text")
+    .attr("x", centerX + 40)
+    .attr("y", -20) // Adjust position according to rect y value
+    .style("font-size", "10px") // Smaller text size
+    .text("Titles Growth")
+    .attr("alignment-baseline", "middle");
+
+g.append("line")
+    .attr("x1", centerX + 130)
+    .attr("y1", -25) // Adjust position according to rect y value
+    .attr("x2", centerX + 150)
+    .attr("y2", -25)
+    .attr("stroke", "#FFA500")
+    .attr("stroke-width", 1.5);
+
+g.append("text")
+    .attr("x", centerX + 160)
+    .attr("y", -20) // Adjust position according to rect y value
+    .style("font-size", "10px") // Smaller text size
+    .text("Customer Growth")
+    .attr("alignment-baseline", "middle");
+
+
+
 
         function enableSlider() {
             const slider = document.getElementById("yearSlider");
