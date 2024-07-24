@@ -15,9 +15,9 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Customer data loaded:", customerData);
 
         milestones = [
-            { year: 2007, description: "Netflix introduces streaming service.", link: "milestone1.html" },
-            { year: 2013, description: "House of Cards, first original series.", link: "milestone2.html" },
-            { year: 2016, description: "Netflix available in 190 countries.", link: "milestone3.html" }
+            { year: 2007, description: "Netflix introduces streaming service.", link: "milestone1.html", titles: 100, customers: 5 },
+            { year: 2013, description: "House of Cards, first original series.", link: "milestone2.html", titles: 200, customers: 10 },
+            { year: 2016, description: "Netflix available in 190 countries.", link: "milestone3.html", titles: 300, customers: 50 }
         ];
 
         createDynamicLineGraphWithMilestones(data, customerData);
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
         g.selectAll("circle.title-circle").remove(); // Remove existing circles before redrawing
         g.selectAll("circle.customer-circle").remove(); // Remove existing circles before redrawing
         g.selectAll(".milestone-line").remove(); // Remove existing milestone lines before redrawing
-        g.selectAll(".milestone-text").remove(); // Remove existing milestone texts before redrawing
+        g.selectAll(".milestone-box").remove(); // Remove existing milestone boxes before redrawing
 
         g.append("path")
             .datum(filteredData)
@@ -149,22 +149,55 @@ document.addEventListener("DOMContentLoaded", function () {
                     .attr("stroke-width", 2)
                     .attr("stroke-dasharray", "4 2");
 
-                g.append("text")
-                    .attr("class", "milestone-text")
-                    .attr("x", x(parseTime(milestone.year)) + 5)
-                    .attr("y", 20)
-                    .style("font-size", "12px")
-                    .style("fill", "#FF6347")
-                    .text(`Milestone ${index + 1}`);
+                const boxGroup = g.append("g")
+                    .attr("class", "milestone-box");
 
-                // Add button to go to milestone details
-                g.append("a")
+                // Add milestone box
+                const boxWidth = 200;
+                const boxHeight = 70;
+                const xBox = x(parseTime(milestone.year)) - boxWidth / 2;
+                const yBox = height / 2 - boxHeight / 2; // Center the box vertically
+
+                boxGroup.append("rect")
+                    .attr("x", xBox)
+                    .attr("y", yBox)
+                    .attr("width", boxWidth)
+                    .attr("height", boxHeight)
+                    .attr("fill", "lightyellow")
+                    .attr("stroke", "#007BFF")
+                    .attr("stroke-width", 2);
+
+                // Add milestone description text
+                boxGroup.append("text")
+                    .attr("x", xBox + 10)
+                    .attr("y", yBox + 20)
+                    .style("font-size", "12px")
+                    .style("fill", "#333333")
+                    .text(milestone.description);
+
+                // Add title count
+                boxGroup.append("text")
+                    .attr("x", xBox + 10)
+                    .attr("y", yBox + 35)
+                    .style("font-size", "12px")
+                    .style("fill", "#333333")
+                    .text(`Titles: ${milestone.titles}`);
+
+                // Add customer count
+                boxGroup.append("text")
+                    .attr("x", xBox + 10)
+                    .attr("y", yBox + 50)
+                    .style("font-size", "12px")
+                    .style("fill", "#333333")
+                    .text(`Customers: ${milestone.customers}M`);
+
+                // Add "More details" link
+                boxGroup.append("a")
                     .attr("xlink:href", milestone.link)
                     .attr("target", "_self")
                     .append("text")
-                    .attr("class", "milestone-text")
-                    .attr("x", x(parseTime(milestone.year)) + 5)
-                    .attr("y", 40)
+                    .attr("x", xBox + 10)
+                    .attr("y", yBox + 65)
                     .style("font-size", "12px")
                     .style("fill", "#007BFF")
                     .style("text-decoration", "underline")
@@ -397,51 +430,46 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Add legend for line labels
         // Calculate the center position for the legend
-// Calculate the center position for the legend
-// Calculate the center position for the legend
-const legendWidth = 350; // Total width of the legend box
-const centerX = (width - legendWidth) / 2; // Calculate the x position to center the legend
+        const legendWidth = 350; // Total width of the legend box
+        const centerX = (width - legendWidth) / 2; // Calculate the x position to center the legend
 
-g.append("rect")
-    .attr("x", centerX)
-    .attr("y", -40) // Move the legend more towards the top
-    .attr("width", legendWidth)
-    .attr("height", 30)
-    .attr("fill", "white")
-    .attr("stroke", "black");
+        g.append("rect")
+            .attr("x", centerX)
+            .attr("y", -40) // Move the legend more towards the top
+            .attr("width", legendWidth)
+            .attr("height", 30)
+            .attr("fill", "white")
+            .attr("stroke", "black");
 
-g.append("line")
-    .attr("x1", centerX + 10)
-    .attr("y1", -25) // Adjust position according to rect y value
-    .attr("x2", centerX + 30)
-    .attr("y2", -25)
-    .attr("stroke", "#87CEEB")
-    .attr("stroke-width", 1.5);
+        g.append("line")
+            .attr("x1", centerX + 10)
+            .attr("y1", -25) // Adjust position according to rect y value
+            .attr("x2", centerX + 30)
+            .attr("y2", -25)
+            .attr("stroke", "#87CEEB")
+            .attr("stroke-width", 1.5);
 
-g.append("text")
-    .attr("x", centerX + 40)
-    .attr("y", -20) // Adjust position according to rect y value
-    .style("font-size", "10px") // Smaller text size
-    .text("Titles Growth")
-    .attr("alignment-baseline", "middle");
+        g.append("text")
+            .attr("x", centerX + 40)
+            .attr("y", -20) // Adjust position according to rect y value
+            .style("font-size", "10px") // Smaller text size
+            .text("Titles Growth")
+            .attr("alignment-baseline", "middle");
 
-g.append("line")
-    .attr("x1", centerX + 130)
-    .attr("y1", -25) // Adjust position according to rect y value
-    .attr("x2", centerX + 150)
-    .attr("y2", -25)
-    .attr("stroke", "#FFA500")
-    .attr("stroke-width", 1.5);
+        g.append("line")
+            .attr("x1", centerX + 130)
+            .attr("y1", -25) // Adjust position according to rect y value
+            .attr("x2", centerX + 150)
+            .attr("y2", -25)
+            .attr("stroke", "#FFA500")
+            .attr("stroke-width", 1.5);
 
-g.append("text")
-    .attr("x", centerX + 160)
-    .attr("y", -20) // Adjust position according to rect y value
-    .style("font-size", "10px") // Smaller text size
-    .text("Customer Growth")
-    .attr("alignment-baseline", "middle");
-
-
-
+        g.append("text")
+            .attr("x", centerX + 160)
+            .attr("y", -20) // Adjust position according to rect y value
+            .style("font-size", "10px") // Smaller text size
+            .text("Customer Growth")
+            .attr("alignment-baseline", "middle");
 
         function enableSlider() {
             const slider = document.getElementById("yearSlider");
@@ -459,6 +487,9 @@ g.append("text")
 
                 g.selectAll(".customer-circle")
                     .attr("opacity", d => d.year.getFullYear() <= year ? 1 : 0);
+
+                // Update visibility of milestone boxes
+                g.selectAll(".milestone-box").attr("opacity", d => d.year <= year ? 1 : 0);
             });
         }
 
