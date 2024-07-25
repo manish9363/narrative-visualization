@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const annotations = [
             { x: 2013, y: 5, dx: 30, dy: -40, color: "#FFA500", text: "Significant rise in viewership after 'House of Cards'.", line: "originalSeries" },
-            { x: 2018, y: 13, dx: -350, dy: -100, color: "#32CD32", text: "Licensed content maintains steady viewership.", line: "licensedContent" },
+            { x: 2018, y: 13, dx: -400, dy: -100, color: "#32CD32", text: "Licensed content maintains steady viewership.", line: "licensedContent" },
             { x: 2019, y: 60, dx: -450, dy: -30, color: "#FFA500", text: "Original series continue to grow in popularity.", line: "originalSeries" }
         ];
 
