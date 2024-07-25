@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateGraphForYear(year) {
         const svg = d3.select("#line-graph svg");
-        const margin = { top: 50, right: 50, bottom: 50, left: 60 };
+        const margin = { top: 50, right: 50, bottom: 50, left: 100 }; // Increased left margin
         const width = +svg.attr("width") - margin.left - margin.right;
         const height = +svg.attr("height") - margin.top - margin.bottom;
         const g = svg.select("g");
@@ -218,7 +218,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("width", 1300) // Adjusted width
             .attr("height", 475); // Adjusted height
 
-        const margin = { top: 50, right: 50, bottom: 50, left: 60 }; // Adjusted margins
+        const margin = { top: 50, right: 50, bottom: 50, left: 100 }; // Increased left margin
         const width = +svg.attr("width") - margin.left - margin.right;
         const height = +svg.attr("height") - margin.top - margin.bottom;
         const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
@@ -347,7 +347,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         g.append("text")
             .attr("transform", "rotate(-90)")
-            .attr("y", width + margin.right - 20)
+            .attr("y", width + margin.right - 20) // Adjusted to bring it more left
             .attr("x", 0 - (height / 2))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
