@@ -11,9 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const data = datasets[0];
         const customerData = datasets[1];
 
-        console.log("CSV data loaded:", data);
-        console.log("Customer data loaded:", customerData);
-
         milestones = [
             { year: 2007, description: "Netflix introduces streaming service.", link: "milestone1.html" },
             { year: 2013, description: "House of Cards, first original series.", link: "milestone2.html" },
@@ -33,13 +30,17 @@ document.addEventListener("DOMContentLoaded", function () {
             yearLabel.innerText = year;
             updateGraphForYear(year);
         });
+
+        window.addEventListener("resize", () => {
+            createDynamicLineGraphWithMilestones(data, customerData);
+        });
     }).catch(function (error) {
         console.error('Error loading the CSV files:', error);
     });
 
     function updateGraphForYear(year) {
         const svg = d3.select("#line-graph svg");
-        const margin = { top: 50, right: 50, bottom: 50, left: 100 }; // Increased left margin
+        const margin = { top: 50, right: 50, bottom: 50, left: 100 };
         const width = +svg.attr("width") - margin.left - margin.right;
         const height = +svg.attr("height") - margin.top - margin.bottom;
         const g = svg.select("g");
@@ -214,11 +215,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function createDynamicLineGraphWithMilestones(data, customerData) {
-        const svg = d3.select("#line-graph").append("svg")
-            .attr("width", 1300) // Adjusted width
-            .attr("height", 475); // Adjusted height
+        const container = d3.select("#line-graph");
+        container.selectAll("*").remove(); // Clear existing graph
 
-        const margin = { top: 50, right: 50, bottom: 50, left: 100 }; // Increased left margin
+        const svg = container.append("svg")
+            .attr("width", container.node().getBoundingClientRect().width)
+            .attr("height", 475);
+
+        const margin = { top: 50, right: 50, bottom: 50, left: 100 };
         const width = +svg.attr("width") - margin.left - margin.right;
         const height = +svg.attr("height") - margin.top - margin.bottom;
         const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
@@ -334,7 +338,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         g.append("text")
             .attr("transform", "rotate(-90)")
-            .attr("y", 0 - margin.left)
+            .attr("y", 0 - margin.left + 20) // Adjusted position
             .attr("x", 0 - (height / 2))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
@@ -347,9 +351,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         g.append("text")
             .attr("transform", "rotate(-90)")
-            .attr("y", width + margin.right - 20) // Adjusted to bring it more left
+            .attr("y", width + margin.right - 35) // Adjusted position
             .attr("x", 0 - (height / 2))
-            .attr("dy", "1em")
+            .attr("dy", "2em") // Adjusted distance
             .style("text-anchor", "middle")
             .text("Customers (Millions)");
 
