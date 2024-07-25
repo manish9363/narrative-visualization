@@ -107,7 +107,20 @@ document.addEventListener("DOMContentLoaded", function() {
                 .attr("y", d => y(d.customers))
                 .attr("width", x.bandwidth())
                 .attr("height", d => height - y(d.customers))
-                .attr("fill", d => d.year >= 2007 ? "#ff6347" : "#007BFF");
+                .attr("fill", d => d.year >= 2007 ? "#ff6347" : "#007BFF")
+                .on("mouseover", function(event, d) {
+                    tooltip.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                    tooltip.html(`Year: ${d.year}<br>Customers: ${(d.customers / 1000000).toFixed(1)}M`)
+                        .style("left", (event.pageX + 5) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", function() {
+                    tooltip.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                });
 
             // Add labels on bars
             svg.selectAll(".bar")
@@ -157,6 +170,16 @@ document.addEventListener("DOMContentLoaded", function() {
                 return { year: +year, customers };
             });
         }
+
+        // Define tooltip at the higher scope
+        const tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("position", "absolute")
+            .style("background", "lightsteelblue")
+            .style("padding", "5px")
+            .style("border-radius", "5px")
+            .style("pointer-events", "none")
+            .style("opacity", 0);
     }).catch(function(error) {
         console.error('Error loading the CSV file:', error);
     });

@@ -220,7 +220,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const svg = container.append("svg")
             .attr("width", container.node().getBoundingClientRect().width)
-            .attr("height", 475);
+            .attr("height", 435);
 
         const margin = { top: 50, right: 50, bottom: 50, left: 100 };
         const width = +svg.attr("width") - margin.left - margin.right;

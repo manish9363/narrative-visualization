@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Milestone 2: House of Cards, First Original Series</title>
+    <title>2013: House of Cards – A Game Changer in Original Content and Customer Experience</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://d3js.org/d3.v6.min.js"></script>
 </head>
@@ -22,18 +22,20 @@
                 </p>
             </div>
             <div class="visualization">
+                <div class="filter">
+                    <label for="filterDropdown" class="highlight">Filter by Content Type: </label>
+                    <select id="filterDropdown">
+                        <option value="Global">Global</option>
+                        <option value="North America">North America</option>
+                        <option value="LATAM">LATAM</option>
+                        <option value="Europe">Europe</option>
+                        <option value="Asia-Pacific">Asia-Pacific</option>
+                        <option value="Middle East and North Africa">Middle East and North Africa</option>
+                        <option value="Sub-Saharan Africa">Sub-Saharan Africa</option>
+                    </select>
+                </div>
                 <h3>Viewership Trends</h3>
                 <div id="combinedChart"></div>
-                <label for="filterDropdown">Filter by Content Type: </label>
-                <select id="filterDropdown">
-                    <option value="Global">Global</option>
-                    <option value="North America">North America</option>
-                    <option value="LATAM">LATAM</option>
-                    <option value="Europe">Europe</option>
-                    <option value="Asia-Pacific">Asia-Pacific</option>
-                    <option value="Middle East and North Africa">Middle East and North Africa</option>
-                    <option value="Sub-Saharan Africa">Sub-Saharan Africa</option>
-                </select>
             </div>
             <div class="navigation">
                 <button onclick="window.history.back()">Back to Main Page</button>

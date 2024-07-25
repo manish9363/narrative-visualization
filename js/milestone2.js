@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         const svgWidth = 1200; // Increase the width of the SVG
-        const svgHeight = 500;
+        const svgHeight = 400;
         const margin = { top: 50, right: 150, bottom: 50, left: 50 }; // Reduce the left margin
         const width = svgWidth - margin.left - margin.right;
         const height = svgHeight - margin.top - margin.bottom;

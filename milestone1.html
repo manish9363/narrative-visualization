@@ -10,7 +10,7 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>2007: Netflix Introduces Streaming Service</h1>
+      <h1>2007: Streaming Service Launch Boosts Netflix Growth</h1>
     </div>
     <div class="content">
       <div class="description">
@@ -22,22 +22,22 @@
         </p>
       </div>
       <div class="visualization">
+        <div class="filter">
+          <label for="filterDropdown" class="highlight">Filter by Region:</label>
+          <select id="filterDropdown">
+            <option value="Global">Global</option>
+            <option value="North America">North America</option>
+            <option value="LATAM">LATAM</option>
+            <option value="Europe">Europe</option>
+            <option value="Asia-Pacific">Asia-Pacific</option>
+            <option value="Middle East and North Africa">Middle East and North Africa</option>
+            <option value="Sub-Saharan Africa">Sub-Saharan Africa</option>
+          </select>
+        </div>
         <div id="customerBaseChart"></div>
       </div>
-      <div class="filter">
-        <label for="filterDropdown">Filter by Region:</label>
-        <select id="filterDropdown">
-          <option value="Global">Global</option>
-          <option value="North America">North America</option>
-          <option value="LATAM">LATAM</option>
-          <option value="Europe">Europe</option>
-          <option value="Asia-Pacific">Asia-Pacific</option>
-          <option value="Middle East and North Africa">Middle East and North Africa</option>
-          <option value="Sub-Saharan Africa">Sub-Saharan Africa</option>
-        </select>
-      </div>
       <div class="source">
-        <p>Data Source: <a href="https://www.kaggle.com/shivamb/netflix-shows" target="_blank">Netflix Shows on Kaggle</a></p>
+        <p>Data Source: <a href="https://www.businessofapps.com/data/netflix-statistics/" target="_blank">netflix-statistics</a></p>
       </div>
       <div class="navigation">
         <button onclick="window.history.back()">Back to Main Page</button>
