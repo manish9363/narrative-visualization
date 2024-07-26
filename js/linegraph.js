@@ -12,9 +12,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const customerData = datasets[1];
 
         milestones = [
-            { year: 2007, description: "Netflix introduces streaming service.", link: "milestone1.html" },
-            { year: 2013, description: "House of Cards, first original series.", link: "milestone2.html" },
-            { year: 2016, description: "Netflix available in 190 countries.", link: "milestone3.html" }
+            { year: 2007, description: "Netflix Launches Streaming", link: "milestone1.html" },
+            { year: 2013, description: "House of Cards, first original series", link: "milestone2.html" },
+            { year: 2016, description: "Netflix available in 190 countries", link: "milestone3.html" }
         ];
 
         createDynamicLineGraphWithMilestones(data, customerData);
@@ -162,8 +162,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     .attr("transform", `translate(${x(parseTime(milestone.year)) - 100},${height / 2 - 70})`); // Adjusted position
 
                 // Add milestone box
-                const boxWidth = 210;
-                const boxHeight = 95;
+                const boxWidth = 205;
+                const boxHeight = 100;
 
                 boxGroup.append("rect")
                     .attr("width", boxWidth)
@@ -175,10 +175,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     .attr("stroke-width", 1)
                     .style("filter", "url(#drop-shadow)");
 
+                boxGroup.append("text")
+                    .attr("x", 80)
+                    .attr("y", 20)
+                    .style("font-size", "11px")
+                    .style("fill", "#FF0000")
+                    .style("font-weight", "bold")
+                    .text(milestone.year);
+
                 // Add milestone description text
                 boxGroup.append("text")
                     .attr("x", 10)
-                    .attr("y", 20)
+                    .attr("y", 40)
                     .style("font-size", "11px")
                     .style("fill", "#333333")
                     .style("font-weight", "bold")
@@ -187,7 +195,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Add title count
                 boxGroup.append("text")
                     .attr("x", 10)
-                    .attr("y", 40)
+                    .attr("y", 60)
                     .style("font-size", "12px")
                     .style("fill", "#333333")
                     .text(`Titles: ${titles}`);
@@ -195,7 +203,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Add customer count
                 boxGroup.append("text")
                     .attr("x", 10)
-                    .attr("y", 55)
+                    .attr("y", 75)
                     .style("font-size", "12px")
                     .style("fill", "#333333")
                     .text(`Customers: ${customers}M`);
@@ -206,7 +214,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     .attr("target", "_self")
                     .append("text")
                     .attr("x", 10)
-                    .attr("y", 75)
+                    .attr("y", 90)
                     .style("font-size", "12px")
                     .style("fill", "#007BFF")
                     .style("text-decoration", "underline")
