@@ -162,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     .attr("transform", `translate(${x(parseTime(milestone.year)) - 100},${height / 2 - 70})`); // Adjusted position
 
                 // Add milestone box
-                const boxWidth = 200;
+                const boxWidth = 230;
                 const boxHeight = 90;
 
                 boxGroup.append("rect")
@@ -172,7 +172,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     .attr("ry", 10)
                     .attr("fill", "lightyellow")
                     .attr("stroke", "#007BFF")
-                    .attr("stroke-width", 2)
+                    .attr("stroke-width", 1)
                     .style("filter", "url(#drop-shadow)");
 
                 // Add milestone description text
@@ -181,6 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     .attr("y", 20)
                     .style("font-size", "12px")
                     .style("fill", "#333333")
+                    .style("font-weight", "bold")
                     .text(milestone.description);
 
                 // Add title count
