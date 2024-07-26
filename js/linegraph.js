@@ -162,8 +162,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     .attr("transform", `translate(${x(parseTime(milestone.year)) - 100},${height / 2 - 70})`); // Adjusted position
 
                 // Add milestone box
-                const boxWidth = 220;
-                const boxHeight = 100;
+                const boxWidth = 210;
+                const boxHeight = 95;
 
                 boxGroup.append("rect")
                     .attr("width", boxWidth)
