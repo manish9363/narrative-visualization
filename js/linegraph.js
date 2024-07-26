@@ -162,8 +162,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     .attr("transform", `translate(${x(parseTime(milestone.year)) - 100},${height / 2 - 70})`); // Adjusted position
 
                 // Add milestone box
-                const boxWidth = 230;
-                const boxHeight = 90;
+                const boxWidth = 220;
+                const boxHeight = 100;
 
                 boxGroup.append("rect")
                     .attr("width", boxWidth)
@@ -179,7 +179,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 boxGroup.append("text")
                     .attr("x", 10)
                     .attr("y", 20)
-                    .style("font-size", "12px")
+                    .style("font-size", "11px")
                     .style("fill", "#333333")
                     .style("font-weight", "bold")
                     .text(milestone.description);
@@ -187,7 +187,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Add title count
                 boxGroup.append("text")
                     .attr("x", 10)
-                    .attr("y", 35)
+                    .attr("y", 40)
                     .style("font-size", "12px")
                     .style("fill", "#333333")
                     .text(`Titles: ${titles}`);
@@ -195,7 +195,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Add customer count
                 boxGroup.append("text")
                     .attr("x", 10)
-                    .attr("y", 50)
+                    .attr("y", 55)
                     .style("font-size", "12px")
                     .style("fill", "#333333")
                     .text(`Customers: ${customers}M`);
@@ -206,7 +206,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     .attr("target", "_self")
                     .append("text")
                     .attr("x", 10)
-                    .attr("y", 65)
+                    .attr("y", 75)
                     .style("font-size", "12px")
                     .style("fill", "#007BFF")
                     .style("text-decoration", "underline")
@@ -491,7 +491,7 @@ document.addEventListener("DOMContentLoaded", function () {
         g.append("text")
             .attr("x", centerX + 40)
             .attr("y", -20) // Adjust position according to rect y value
-            .style("font-size", "10px") // Smaller text size
+            .style("font-size", "12px") // Smaller text size
             .text("Titles launched")
             .attr("alignment-baseline", "middle");
 
@@ -506,7 +506,7 @@ document.addEventListener("DOMContentLoaded", function () {
         g.append("text")
             .attr("x", centerX + 160)
             .attr("y", -20) // Adjust position according to rect y value
-            .style("font-size", "10px") // Smaller text size
+            .style("font-size", "12px") // Smaller text size
             .text("Customer Growth")
             .attr("alignment-baseline", "middle");
 
